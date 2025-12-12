@@ -1,0 +1,65 @@
+# Speckit Constitution
+
+Purpose: Establish shared principles and governance to guide technical decisions across the project, with a focus on code quality, maintainability, testing standards, user experience consistency, and performance requirements.
+
+1. Principles
+- Clarity First: Code must be easy to read and reason about. Prefer explicitness over cleverness.
+- Single Responsibility: Modules and components should have focused, well-defined responsibilities.
+- Progressive Improvement: Iterate to improve quality; prefer incremental, low-risk changes.
+- Fail Fast, Fail Safe: Detect errors early and degrade gracefully for users.
+- Measure, Don’t Guess: Use metrics and tests to validate decisions.
+
+2. Code Quality & Maintainability
+- Standards: Follow agreed style guides and linters. Enforce via pre-commit hooks and CI.
+- Readability: Use descriptive names, short functions, and clear boundaries. Favor composition.
+- Architecture: Prefer modular, decoupled designs with clear interfaces and well-defined layering.
+- Documentation: Public modules, APIs, and complex behaviors must have concise docs and examples.
+- Dependency Management: Track and regularly review third-party dependencies; avoid transitive bloat.
+- Refactoring: Allocate time for targeted refactors; prioritize maintainability debt with cost/benefit.
+
+3. Testing Standards
+- Coverage Goals: Maintain meaningful unit and integration coverage; set team targets (e.g., critical paths 90%+).
+- Test Types: Unit tests for logic, integration tests for contracts, end-to-end tests for user flows.
+- CI Enforcement: All changes must pass CI that runs linters, unit tests, and basic integration checks.
+- Flaky Tests: Treat flakiness as a first-class defect—quarantine and fix before merging large changes.
+- Test Quality: Prefer deterministic, fast tests; mock external services where appropriate and use realistic fixtures.
+- Release Gates: Production releases require passing test suites and successful staging validation.
+
+4. User Experience Consistency
+- Design Tokens: Use shared tokens (colors, spacing, typography) and components to ensure consistency.
+- Accessibility: Follow WCAG AA at minimum; accessibility considerations must be included in acceptance criteria.
+- Predictability: Interactions should be consistent across the product—same patterns for navigation, errors, and feedback.
+- Localization & Internationalization: Design text/content to be localizable; avoid hardcoded strings.
+- Performance Perception: Prioritize perceived performance (progress indicators, optimistic UI) where latency exists.
+
+5. Performance Requirements
+- Budgeting: Define performance budgets (e.g., page load, API latency, memory) for critical user paths.
+- Monitoring: Instrument key paths with metrics, traces, and alerts. Use SLOs and SLIs to track health.
+- Optimization Process: Profile before optimizing; target hotspots with measurable improvement and tests.
+- Resource Efficiency: Avoid premature optimization; prefer scalable patterns and efficient algorithms.
+
+6. Governance & Decision-Making
+- Principle-Driven Decisions: Use this constitution as the primary lens for technical trade-offs.
+- Ownership: Module owners are responsible for quality, tests, documentation, and dependency updates.
+- Proposal Process: Significant changes require a short ADR (Architecture Decision Record) describing intent, alternatives, and trade-offs. Review by relevant owners before implementation.
+- Exceptions: Deviations must be documented with a time-boxed mitigation plan and explicit approval from module owners.
+- Review & Approval: Code reviews are mandatory for all changes; require at least one approving reviewer who is not the author and an owner for cross-cutting changes.
+- Audits & Metrics: Periodic reviews (quarterly) should measure adherence (linting, test pass rates, performance SLOs) and produce actions to address gaps.
+- Deprecation Policy: Deprecate APIs with clear migration guidance, a deprecation period, and notifications to dependents.
+
+7. Implementation Guidance
+- Default Choices: Prefer well-known, actively maintained tools and frameworks with clear upgrade paths.
+- Small, Reversible Changes: Ship small increments with feature flags for risk mitigation and safe rollback.
+- Automation: Automate repetitive checks (linting, formatting, dependency updates, security scans) to reduce human error.
+- Onboarding: New contributors should have a short checklist: run linters, run tests, read key docs, and meet module owners.
+
+8. Compliance & Continuous Improvement
+- Adoption: Teams should endorse and reference this constitution in design discussions and PR descriptions.
+- Feedback Loop: Incorporate feedback from retrospectives and audits to evolve these principles.
+- Visibility: Keep this document discoverable and linked from developer guides and repo README.
+
+Appendix: Quick Checklists
+- PR Checklist: Linted, Tests passing, Docs updated, Reviewer assigned, Performance considered, Accessibility checked (if UI).
+- Release Checklist: CI green, Regression tests run, Performance smoke tests passed, Monitoring alerts active.
+
+Revision: This constitution is a living document; review at least annually and after major platform changes.
