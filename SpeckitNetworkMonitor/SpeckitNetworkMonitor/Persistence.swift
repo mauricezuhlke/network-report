@@ -11,12 +11,19 @@ struct PersistenceController {
     static let shared = PersistenceController()
 
     @MainActor
-    static let preview: PersistenceController = {
+    static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+        for i in 0..<10 {
+            let newSample = NetworkSample(context: viewContext)
+            newSample.timestamp = Date().addingTimeInterval(Double(i) * -60) // Go back in time
+            newSample.latency_avg = Double.random(in: 20...150)
+            newSample.latency_min = newSample.latency_avg - Double.random(in: 5...10)
+            newSample.latency_max = newSample.latency_avg + Double.random(in: 5...20)
+            newSample.jitter_ms = Double.random(in: 1...20)
+            newSample.packet_loss_pct = Double.random(in: 0...1) > 0.9 ? Double.random(in: 0...5) : 0
+            newSample.download_bps_est = Double.random(in: 100_000_000...500_000_000)
+            newSample.upload_bps_est = Double.random(in: 10_000_000...50_000_000)
         }
         do {
             try viewContext.save()
