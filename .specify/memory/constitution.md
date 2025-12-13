@@ -14,7 +14,6 @@ Purpose
 ## 2. Code Quality & Maintainability
 
 - **Style & Conventions**: Adopt, document, and enforce language-specific style guides and linting rules via pre-commit hooks and CI.
-- **Readable APIs**: Public APIs and interfaces must be discoverable and documented with examples; prefer explicit over implicit behaviour.
 - **Small Functions & Composition**: Favor small, composable functions; long methods should be decomposed when readability or testability suffers.
 - **Separation of Concerns**: Keep domain logic, I/O, and orchestration separate to simplify testing and reuse.
 - **Dependency Hygiene**: Add external dependencies only when justified. Track versions, prune unused packages, and run periodic audits for security and license compliance.
@@ -39,8 +38,6 @@ Purpose
 
 ## 5. Performance Requirements
 
-- **Performance Budgets**: Define budgets for critical user journeys (e.g., load time, Time to Interactive, API latency). Track and enforce them in CI/monitoring.
-- **Instrumentation**: Instrument key paths with metrics, tracing, and logs. Define SLIs/SLOs for critical services and monitor them continuously.
 - **Profile Before Optimize**: Use profiling to identify hotspots; prioritize fixes that yield measurable, user-facing gains.
 - **Graceful Degradation**: Design for failure modes—provide fallback behaviors for degraded network or resource constraints.
 
@@ -50,9 +47,6 @@ Purpose
 - **Ownership Model**: Assign clear owners to modules and services. Owners approve cross-cutting changes and are accountable for maintenance, dependency updates, and documentation.
 - **Architecture Decision Records (ADRs)**: For significant technical choices, create an ADR that states intent, alternatives considered, consequences, and migration strategy. ADRs should be short, linked from the relevant module, and reviewed by affected owners.
 - **Review Requirements**: All changes require code review. Cross-cutting changes require approval from at least one owner in the impacted area. Enforce via branch protection rules where possible.
-- **Exception Handling**: Deviations from the constitution are permitted only when justified in an ADR, time-boxed, and accompanied by a mitigation plan and explicit owner approval.
-- **Periodic Audits**: Conduct quarterly reviews that examine linting/formatting compliance, test health, dependency freshness, SLO adherence, and key UX regressions. Publish findings and follow-up action items.
-- **Deprecation Policy**: Deprecate APIs and public contracts with clear notices, migration guides, and a defined deprecation timeline (minimum 90 days for internal APIs; longer for public ones).
 
 ## 7. Implementation Guidance
 
@@ -61,16 +55,12 @@ Purpose
 - **Automate Checks**: Automate formatting, linting, dependency updates, security scans, and basic performance checks in CI.
 - **Onboarding Checklist**: New contributors should: clone the repo, run linters and tests locally, read module READMEs, and meet module owners.
 
-## 8. Compliance & Continuous Improvement
 
-- **Adoption**: Teams are expected to reference this constitution in design docs and PR descriptions; architects and owners should invoke it during reviews.
-- **Feedback Loop**: Use retrospectives and audit results to evolve these rules. Amendments to the constitution require an ADR and owner sign-off.
-- **Visibility**: Link this document from the repo root README and from module-level READMEs where it applies.
 
 ## Appendix — Quick Checklists
 
 - **PR Checklist**: Linted, Tests passing, Docs updated (if public API changed), Performance considered, Accessibility checked (if UI), Reviewer(s) assigned, ADR referenced (if applicable).
 - **Release Checklist**: CI green, Staging smoke tests passed, Performance smoke tests within budget, Monitoring/alerts configured and verified, Rollback plan in place.
 
-**Version**: 1.0 | **Ratified**: [DATE] | **Last Amended**: [DATE]
+**Version**: 1.0 | **Ratified**: [2025-12-12] | **Last Amended**: [2025-12-12]
 
