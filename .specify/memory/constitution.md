@@ -17,6 +17,8 @@ Purpose
 - **Small Functions & Composition**: Favor small, composable functions; long methods should be decomposed when readability or testability suffers.
 - **Separation of Concerns**: Keep domain logic, I/O, and orchestration separate to simplify testing and reuse.
 - **Dependency Hygiene**: Add external dependencies only when justified. Track versions, prune unused packages, and run periodic audits for security and license compliance.
+- **Coemmnt and Self-Documenting Code**: Strive for self-explanatory code through clear naming and structure.
+- **Commentary**: Use comments to explain the "why" behind decisions, not the "what" or "how" that should be clear from the code itself.
 - **Documentation**: Maintain concise README-level docs for modules, plus API docs for public surfaces. Document rationale for non-obvious decisions.
 
 ## 3. Testing Standards
