@@ -28,16 +28,16 @@
 
 ### Tests for User Story 1
 
-- [ ] T006 [US1] Write a unit test to verify the ICMP ping logic correctly measures latency.
-- [ ] T007 [US1] Write a UI test to ensure the `ContentView` correctly displays a sample data point provided by a mocked XPC service.
+- [x] T006 [US1] Write a unit test to verify the ICMP ping logic correctly measures latency.
+- [x] T007 [US1] Write a UI test to ensure the `ContentView` correctly displays a sample data point provided by a mocked XPC service.
 
 ### Implementation for User Story 1
 
 - [x] T008 [US1] Implement ICMP ping logic within the `NetworkMonitorAgent.swift` to collect latency samples.
 - [x] T009 [US1] Store the collected latency samples in the Core Data database via the persistence controller.
 - [x] T010 [US1] Expose a method via the XPC protocol to fetch the most recent latency sample.
-- [ ] T011 [US1] [P] In the UI, create a simple SwiftUI chart in `ContentView.swift` to display time-series data.
-- [ ] T012 [US1] Connect the `ContentView` chart to the XPC service to periodically fetch and display the latest latency data.
+- [x] T011 [US1] [P] In the UI, create a simple SwiftUI chart in `ContentView.swift` to display time-series data.
+- [x] T012 [US1] Connect the `ContentView` chart to the XPC service to periodically fetch and display the latest latency data.
 
 **Checkpoint**: User Story 1 is functional. The main app displays a live-updating chart of network latency.
 
@@ -56,10 +56,10 @@
 ### Implementation for User Story 2
 
 - [x] T015 [US2] Expand the agent's data collection in `NetworkMonitorAgent.swift` to also measure jitter and packet loss.
-- [ ] T016 [US2] Implement the data aggregation logic to create 5-minute and 1-hour summary data points.
-- [ ] T017 [US2] [P] Enhance the XPC protocol to allow the UI to request historical data by time range.
-- [ ] T018 [US2] In the UI, add controls (e.g., a `DatePicker`) to allow users to select a time range.
-- [ ] T019 [US2] Update `ContentView.swift` and related views to display separate charts for latency, jitter, and packet loss, populated with data from the XPC service based on the selected time range.
+- [x] T016 [US2] Implement the data aggregation logic to create 5-minute and 1-hour summary data points.
+- [x] T017 [US2] [P] Enhance the XPC protocol to allow the UI to request historical data by time range.
+- [x] T018 [US2] In the UI, add controls (e.g., a `DatePicker`) to allow users to select a time range.
+- [x] T019 [US2] Update `ContentView.swift` and related views to display separate charts for latency, jitter, and packet loss, populated with data from the XPC service based on the selected time range.
 
 **Checkpoint**: User Story 2 is functional. The UI can display historical charts for multiple metrics.
 
@@ -72,14 +72,14 @@
 
 ### Tests for User Story 3
 
-- [ ] T020 [US3] Write a unit test for the logic that determines if a network sample breaches the defined quality threshold.
+- [x] T020 [US3] Write a unit test for the logic that determines if a network sample breaches the defined quality threshold.
 
 ### Implementation for User Story 3
 
-- [ ] T021 [US3] [P] Add a settings section to the UI to allow users to enable/disable notifications and set a latency threshold.
-- [ ] T022 [US3] Pass the notification configuration from the UI to the agent via XPC.
-- [ ] T023 [US3] In `NetworkMonitorAgent.swift`, implement logic to check each new sample against the threshold.
-- [ ] T024 [US3] If the threshold is breached, use `UNUserNotificationCenter` from within the agent to post a system notification.
+- [x] T021 [US3] [P] Add a settings section to the UI to allow users to enable/disable notifications and set a latency threshold.
+- [x] T022 [US3] Pass the notification configuration from the UI to the agent via XPC.
+- [x] T023 [US3] In `NetworkMonitorAgent.swift`, implement logic to check each new sample against the threshold.
+- [x] T024 [US3] If the threshold is breached, use `UNUserNotificationCenter` from within the agent to post a system notification.
 
 **Checkpoint**: User Story 3 is functional. The app can send alerts based on network conditions.
 
@@ -87,7 +87,7 @@
 
 ## Phase 5: Polish & Cross-Cutting Concerns
 
-- [ ] T025 [P] Implement the `NSStatusItem` (menu bar icon) for quick access to the app status.
-- [ ] T026 [P] Add documentation to the public-facing methods in the XPC protocol.
-- [ ] T027 Refine error handling for XPC communication and data collection.
-- [ ] T028 Code cleanup and final UI polish based on user feedback.
+- [x] T025 [P] Implement the `NSStatusItem` (menu bar icon) for quick access to the app status.
+- [x] T026 [P] Add documentation to the public-facing methods in the XPC protocol.
+- [x] T027 Refine error handling for XPC communication and data collection.
+- [x] T028 Code cleanup and final UI polish based on user feedback.
