@@ -11,6 +11,14 @@ import Network
 import CoreData
 import SystemConfiguration
 import AppKit
+import UserNotifications
+
+extension Array where Element == Double {
+    func average() -> Double? {
+        guard !self.isEmpty else { return nil }
+        return self.reduce(0, +) / Double(self.count)
+    }
+}
 
 fileprivate let logger = Logger(subsystem: "com.speckit.NetworkMonitorAgent", category: "Agent")
 
@@ -87,86 +95,61 @@ public class AggregatedSeries: NSManagedObject {
 
 // MARK: - Measurement Classes
 
-class ICMPPinger {
-    struct PingResult {
-        let rtt: Double? // Round-trip time in ms
-        let packetLoss: Double? // Packet loss in percentage
-    }
-    
-    /// Executes the ping command and parses the output.
-    func ping(host: String, count: Int = 4, timeout: Int = 1) -> PingResult {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/sbin/ping")
-        process.arguments = ["-c", "\(count)", "-t", "\(timeout)", host]
-        
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        
-        do {
-            try process.run()
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            process.waitUntilExit()
-            
-            if let output = String(data: data, encoding: .utf8) {
-                return parsePingOutput(output)
-            }
-        } catch {
-            logger.error("Ping failed to run: \(error.localizedDescription)")
-        }
-        
-        return PingResult(rtt: nil, packetLoss: nil)
-    }
-    
-    /// Parses the string output from the ping command.
-    private func parsePingOutput(_ output: String) -> PingResult {
-        var rtt: Double?
-        var packetLoss: Double?
-        
-        // Example output for packet loss: "4 packets transmitted, 4 packets received, 0.0% packet loss"
-        if let lossRegex = try? NSRegularExpression(pattern: "(\\d+\\.?\\d*)% packet loss"),
-           let match = lossRegex.firstMatch(in: output, range: NSRange(output.startIndex..., in: output)),
-           let range = Range(match.range(at: 1), in: output) {
-            packetLoss = Double(output[range])
-        }
-        
-        // Example output for RTT: "round-trip min/avg/max/stddev = 10.327/11.569/13.435/1.235 ms"
-        if let rttRegex = try? NSRegularExpression(pattern: "round-trip min/avg/max/stddev = (\\d+\\.?\\d*)/(\\d+\\.?\\d*)/(\\d+\\.?\\d*)/(\\d+\\.?\\d*) ms"),
-           let match = rttRegex.firstMatch(in: output, range: NSRange(output.startIndex..., in: output)),
-           let range = Range(match.range(at: 2), in: output) { // avg rtt
-            rtt = Double(output[range])
-        }
-        
-        return PingResult(rtt: rtt, packetLoss: packetLoss)
-    }
-}
+
 class TCPConnector {
     
-    /// Measures the time to establish a TCP connection.
+    /// Measures the time to establish a TCP connection using Berkeley Sockets.
     func connect(host: String, port: UInt16, completion: @escaping (TimeInterval?) -> Void) {
-        guard let nwPort = NWEndpoint.Port(rawValue: port) else {
+        var hints = addrinfo()
+        hints.ai_family = AF_INET // Specify IPv4, can be AF_UNSPEC for both
+        hints.ai_socktype = SOCK_STREAM
+        
+        var res: UnsafeMutablePointer<addrinfo>?
+        
+        // Resolve host and port
+        let ret = getaddrinfo(host, String(port), &hints, &res)
+        if ret != 0 {
+            logger.error("TCPConnector: getaddrinfo failed for host \(host): \(String(cString: gai_strerror(ret)))")
             completion(nil)
             return
         }
         
-        let endpoint = NWEndpoint.host(host)
-        let connection = NWConnection(to: endpoint, using: .tcp)
-        let startTime = CFAbsoluteTimeGetCurrent()
-        
-        connection.stateUpdateHandler = { state in
-            switch state {
-            case .ready:
-                let connectionTime = (CFAbsoluteTimeGetCurrent() - startTime) * 1000 // in ms
-                completion(connectionTime)
-                connection.cancel()
-            case .failed(let error):
-                completion(nil)
-                connection.cancel()
-            default:
-                break
-            }
+        guard let info = res else {
+            completion(nil)
+            return
         }
         
-        connection.start(queue: .global(qos: .userInitiated))
+        defer {
+            freeaddrinfo(info)
+        }
+        
+        // Create a socket
+        let sock = socket(info.pointee.ai_family, info.pointee.ai_socktype, info.pointee.ai_protocol)
+        if sock < 0 {
+            logger.error("TCPConnector: failed to create socket.")
+            completion(nil)
+            return
+        }
+        
+        defer {
+            close(sock)
+        }
+        
+        let startTime = CFAbsoluteTimeGetCurrent()
+        
+        // Connect to the server
+        let connectResult = Darwin.connect(sock, info.pointee.ai_addr, info.pointee.ai_addrlen)
+        
+        let endTime = CFAbsoluteTimeGetCurrent()
+        
+        if connectResult < 0 {
+            logger.error("TCPConnector: failed to connect to host \(host).")
+            completion(nil)
+            return
+        }
+        
+        let connectionTime = (endTime - startTime) * 1000 // in ms
+        completion(connectionTime)
     }
 }
 class JitterCalculator {
@@ -205,7 +188,7 @@ class ThroughputEstimator: NSObject, URLSessionDataDelegate {
         
         let session = URLSession.shared
         let task = session.uploadTask(with: request, from: data) { _, _, error in
-            if let error = error {
+            if error != nil {
                 completion(nil)
                 return
             }
@@ -239,7 +222,7 @@ class DataAggregator {
     func aggregateSamples(in context: NSManagedObjectContext, forInterval interval: TimeInterval, type: String) async {
         logger.log("Aggregating samples for \(type) interval...")
         
-        let fetchRequest: NSFetchRequest<NetworkSample> = NetworkSample.fetchRequest()
+        let fetchRequest: NSFetchRequest<NetworkSample> = NSFetchRequest<NetworkSample>(entityName: "NetworkSample")
         let now = Date()
         let twoHoursAgo = now.addingTimeInterval(-2 * 3600) // Aggregate last 2 hours of raw data
         fetchRequest.predicate = NSPredicate(format: "timestamp >= %@", twoHoursAgo as NSDate)
@@ -258,7 +241,7 @@ class DataAggregator {
                 return twoHoursAgo.addingTimeInterval(Double(intervalIndex) * interval)
             }
             
-            for (intervalStart, samplesInInterval) in groupedSamples {
+            for (_, samplesInInterval) in groupedSamples {
                 let sortedSamples = samplesInInterval.sorted(by: { $0.timestamp < $1.timestamp })
                 guard let firstSampleTime = sortedSamples.first?.timestamp,
                       let lastSampleTime = sortedSamples.last?.timestamp else { continue }
@@ -608,32 +591,12 @@ class NetworkMonitorAgent: NSObject, NetworkMonitorAgentProtocol, SystemMonitorD
         completion(status)
     }
 
-    func fetchLatestSample(completion: @escaping (Data?) -> Void) {
+    func getSamples(completion: @escaping (Data) -> Void) {
         let context = persistenceController.newBackgroundTask()
+        let endDate = Date()
+        let startDate = endDate.addingTimeInterval(-3600) // Last hour
         context.perform {
-            let fetchRequest: NSFetchRequest<NetworkSample> = NetworkSample.fetchRequest()
-            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
-            fetchRequest.fetchLimit = 1
-            
-            do {
-                if let managedSample = try context.fetch(fetchRequest).first {
-                    let dto = NetworkSampleDTO(timestamp: managedSample.timestamp, latency: managedSample.latency_avg, packetLoss: managedSample.packet_loss_pct, connectivity: true)
-                    let data = try JSONEncoder().encode(dto)
-                    completion(data)
-                } else {
-                    completion(nil)
-                }
-            } catch {
-                logger.error("Failed to fetch latest sample: \(error.localizedDescription)")
-                completion(nil)
-            }
-        }
-    }
-
-    func fetchSamples(from startDate: Date, to endDate: Date, completion: @escaping (Data) -> Void) {
-        let context = persistenceController.newBackgroundTask()
-        context.perform {
-            let fetchRequest: NSFetchRequest<NetworkSample> = NetworkSample.fetchRequest()
+            let fetchRequest: NSFetchRequest<NetworkSample> = NSFetchRequest<NetworkSample>(entityName: "NetworkSample")
             fetchRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp <= %@", startDate as NSDate, endDate as NSDate)
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: true)]
             
@@ -649,10 +612,14 @@ class NetworkMonitorAgent: NSObject, NetworkMonitorAgentProtocol, SystemMonitorD
         }
     }
 
-    func fetchAggregatedSamples(from startDate: Date, to endDate: Date, intervalType: String, metricType: String, completion: @escaping (Data) -> Void) {
+    func getAggregatedSamples(completion: @escaping (Data) -> Void) {
         let context = persistenceController.newBackgroundTask()
+        let endDate = Date()
+        let startDate = endDate.addingTimeInterval(-2 * 3600) // Last 2 hours
+        let intervalType = "5m"
+        let metricType = "latency"
         context.perform {
-            let fetchRequest: NSFetchRequest<AggregatedSeries> = AggregatedSeries.fetchRequest()
+            let fetchRequest: NSFetchRequest<AggregatedSeries> = NSFetchRequest<AggregatedSeries>(entityName: "AggregatedSeries")
             let predicates = [
                 NSPredicate(format: "timestampStartUTC >= %@", startDate as NSDate),
                 NSPredicate(format: "timestampStartUTC <= %@", endDate as NSDate),
@@ -675,13 +642,24 @@ class NetworkMonitorAgent: NSObject, NetworkMonitorAgentProtocol, SystemMonitorD
         }
     }
 
-    func updateNotificationConfiguration(configuration: Data) {
+    func getNotificationConfiguration(completion: @escaping (Data) -> Void) {
+        do {
+            let data = try JSONEncoder().encode(self.notificationConfiguration)
+            completion(data)
+        } catch {
+            logger.error("Failed to encode notification configuration: \(error.localizedDescription)")
+            completion(Data())
+        }
+    }
+
+    func setNotificationConfiguration(_ configuration: Data, completion: @escaping () -> Void) {
         do {
             self.notificationConfiguration = try JSONDecoder().decode(NotificationConfigurationDTO.self, from: configuration)
             logger.log("Updated notification configuration.")
         } catch {
             logger.error("Failed to decode notification configuration: \(error.localizedDescription)")
         }
+        completion()
     }
 
     // MARK: - SystemMonitorDelegate
