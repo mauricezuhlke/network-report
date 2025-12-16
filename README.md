@@ -1,4 +1,4 @@
-# 🚀 Speckit Network Monitor 🚀
+# 🚀 Network Monitor 🚀
 
 **(A fun, little network buddy for your Mac!)**
 
@@ -31,6 +31,16 @@ For the tech-curious among us, Speckit is a native macOS application built with 
 *   **Swift & SwiftUI:** For a snappy, modern, and beautiful user interface.
 *   **XPC Services:** We use a separate agent for the heavy lifting of network monitoring, keeping the main app light and responsive.
 *   **ICMP Pinging:** The core of our monitoring is based on the good ol' Internet Control Message Protocol.
+
+## 🏡 How We Built This (with a little help from our AI friends!)
+
+This project is a demonstration of what's possible with modern AI-driven development. We used a tool called **Speckit** to help us build this network monitor from the ground up.
+
+**Why Speckit?** Because it lets us describe our goals in plain English, and it handles the heavy lifting of turning those specifications into real, working code. It's like having a super-powered pair programmer that never needs a coffee break! ☕️
+
+We believe this is the future of software development, and we wanted to share a concrete example. You can follow in our footsteps and build your own awesome projects with AI.
+
+👉 **Check out the Speckit repository to learn more: [Link to Speckit Repo](https://github.com/example/speckit)**
 
 ## 💖 Contributing
 
