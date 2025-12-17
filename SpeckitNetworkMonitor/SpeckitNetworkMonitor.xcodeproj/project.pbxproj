@@ -8,10 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		4F046DDB2EEE16F7008786D4 /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F046DDA2EEE16F7008786D4 /* Charts.framework */; };
-		4F5C39A82EF2117F00607D1F /* NetworkMonitorAgent.xpc in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4F046DCC2EEE133A008786D4 /* NetworkMonitorAgent.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4F5C39A82EF2117F00607D1F /* NetworkMonitorAgent.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 4F046DCC2EEE133A008786D4 /* NetworkMonitorAgent.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		4F5FACDE2EF2CF2E00B15BD7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4F046DAD2EEE12F8008786D4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4F046DCB2EEE133A008786D4;
+			remoteInfo = NetworkMonitorAgent;
+		};
 		4FA441722EEF8586006A375A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4F046DAD2EEE12F8008786D4 /* Project object */;
@@ -22,14 +29,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		4F5C39A72EF2116900607D1F /* CopyFiles */ = {
+		4F5C39A72EF2116900607D1F /* Embed XPC Services */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/XPCServices";
 			dstSubfolderSpec = 16;
 			files = (
-				4F5C39A82EF2117F00607D1F /* NetworkMonitorAgent.xpc in CopyFiles */,
+				4F5C39A82EF2117F00607D1F /* NetworkMonitorAgent.xpc in Embed XPC Services */,
 			);
+			name = "Embed XPC Services";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -137,11 +145,12 @@
 				4F046DB12EEE12F8008786D4 /* Sources */,
 				4F046DB22EEE12F8008786D4 /* Frameworks */,
 				4F046DB32EEE12F8008786D4 /* Resources */,
-				4F5C39A72EF2116900607D1F /* CopyFiles */,
+				4F5C39A72EF2116900607D1F /* Embed XPC Services */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4F5FACDF2EF2CF2E00B15BD7 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				4F046DB72EEE12F8008786D4 /* SpeckitNetworkMonitor */,
@@ -290,6 +299,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		4F5FACDF2EF2CF2E00B15BD7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4F046DCB2EEE133A008786D4 /* NetworkMonitorAgent */;
+			targetProxy = 4F5FACDE2EF2CF2E00B15BD7 /* PBXContainerItemProxy */;
+		};
 		4FA441732EEF8586006A375A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4F046DB42EEE12F8008786D4 /* SpeckitNetworkMonitor */;
@@ -433,7 +447,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = VKVL298YR3;
-				ENABLE_APP_SANDBOX = NO;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -476,7 +490,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = VKVL298YR3;
-				ENABLE_APP_SANDBOX = NO;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
