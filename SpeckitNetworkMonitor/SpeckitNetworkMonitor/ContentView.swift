@@ -39,7 +39,7 @@ struct ContentView: View {
     
         var body: some View {
             VStack(spacing: 20) {
-                Text("Speckit Network Monitor")
+                Text("Network Monitor")
                     .font(.largeTitle)
     
                 VStack {

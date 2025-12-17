@@ -591,10 +591,30 @@ class NetworkMonitorAgent: NSObject, NetworkMonitorAgentProtocol, SystemMonitorD
         completion(status)
     }
 
-    func getSamples(completion: @escaping (Data) -> Void) {
+    func fetchLatestSample(completion: @escaping (Data?) -> Void) {
         let context = persistenceController.newBackgroundTask()
-        let endDate = Date()
-        let startDate = endDate.addingTimeInterval(-3600) // Last hour
+        context.perform {
+            let fetchRequest: NSFetchRequest<NetworkSample> = NSFetchRequest<NetworkSample>(entityName: "NetworkSample")
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+            fetchRequest.fetchLimit = 1
+            
+            do {
+                if let managedSample = try context.fetch(fetchRequest).first {
+                    let dto = NetworkSampleDTO(timestamp: managedSample.timestamp, latency: managedSample.latency_avg, packetLoss: managedSample.packet_loss_pct, connectivity: true)
+                    let data = try JSONEncoder().encode(dto)
+                    completion(data)
+                } else {
+                    completion(nil)
+                }
+            } catch {
+                logger.error("Failed to fetch latest sample: \(error.localizedDescription)")
+                completion(nil)
+            }
+        }
+    }
+
+    func fetchSamples(from startDate: Date, to endDate: Date, completion: @escaping (Data) -> Void) {
+        let context = persistenceController.newBackgroundTask()
         context.perform {
             let fetchRequest: NSFetchRequest<NetworkSample> = NSFetchRequest<NetworkSample>(entityName: "NetworkSample")
             fetchRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp <= %@", startDate as NSDate, endDate as NSDate)
@@ -612,12 +632,8 @@ class NetworkMonitorAgent: NSObject, NetworkMonitorAgentProtocol, SystemMonitorD
         }
     }
 
-    func getAggregatedSamples(completion: @escaping (Data) -> Void) {
+    func fetchAggregatedSamples(from startDate: Date, to endDate: Date, intervalType: String, metricType: String, completion: @escaping (Data) -> Void) {
         let context = persistenceController.newBackgroundTask()
-        let endDate = Date()
-        let startDate = endDate.addingTimeInterval(-2 * 3600) // Last 2 hours
-        let intervalType = "5m"
-        let metricType = "latency"
         context.perform {
             let fetchRequest: NSFetchRequest<AggregatedSeries> = NSFetchRequest<AggregatedSeries>(entityName: "AggregatedSeries")
             let predicates = [
@@ -642,24 +658,13 @@ class NetworkMonitorAgent: NSObject, NetworkMonitorAgentProtocol, SystemMonitorD
         }
     }
 
-    func getNotificationConfiguration(completion: @escaping (Data) -> Void) {
-        do {
-            let data = try JSONEncoder().encode(self.notificationConfiguration)
-            completion(data)
-        } catch {
-            logger.error("Failed to encode notification configuration: \(error.localizedDescription)")
-            completion(Data())
-        }
-    }
-
-    func setNotificationConfiguration(_ configuration: Data, completion: @escaping () -> Void) {
+    func updateNotificationConfiguration(configuration: Data) {
         do {
             self.notificationConfiguration = try JSONDecoder().decode(NotificationConfigurationDTO.self, from: configuration)
             logger.log("Updated notification configuration.")
         } catch {
             logger.error("Failed to decode notification configuration: \(error.localizedDescription)")
         }
-        completion()
     }
 
     // MARK: - SystemMonitorDelegate

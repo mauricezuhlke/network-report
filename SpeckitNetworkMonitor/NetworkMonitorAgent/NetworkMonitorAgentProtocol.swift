@@ -10,11 +10,10 @@ import Foundation
 @objc public protocol NetworkMonitorAgentProtocol {
     func startMonitoring()
     func stopMonitoring()
-    func getSamples(completion: @escaping (Data) -> Void)
-    func getAggregatedSamples(completion: @escaping (Data) -> Void)
     func getStatus(completion: @escaping (String) -> Void)
 
-    // New methods for notification configuration
-    func getNotificationConfiguration(completion: @escaping (Data) -> Void)
-    func setNotificationConfiguration(_ configuration: Data, completion: @escaping () -> Void)
+    func fetchLatestSample(completion: @escaping (Data?) -> Void)
+    func fetchSamples(from startDate: Date, to endDate: Date, completion: @escaping (Data) -> Void)
+    func fetchAggregatedSamples(from startDate: Date, to endDate: Date, intervalType: String, metricType: String, completion: @escaping (Data) -> Void)
+    func updateNotificationConfiguration(configuration: Data)
 }

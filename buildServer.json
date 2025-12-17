@@ -14,6 +14,6 @@
 	],
 	"workspace": "/Users/maro/Documents/Projects/SDD/network-report/SpeckitNetworkMonitor/SpeckitNetworkMonitor.xcodeproj/project.xcworkspace",
 	"build_root": "/Users/maro/Library/Developer/Xcode/DerivedData/SpeckitNetworkMonitor-elphwnredsugxpeojqehlgbzmihj",
-	"scheme": "NetworkMonitorAgent",
+	"scheme": "SpeckitNetworkMonitor",
 	"kind": "xcode"
 }

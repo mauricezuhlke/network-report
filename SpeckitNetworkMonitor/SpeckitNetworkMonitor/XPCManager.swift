@@ -19,14 +19,14 @@ class XPCManager: ObservableObject {
     @Published var aggregatedDownloadSeries: [AggregatedSeriesDTO] = [] // New
     @Published var aggregatedUploadSeries: [AggregatedSeriesDTO] = [] // New
     
-    @Published var connectionStatus: String = "Not Connected"
+    @Published var connectionStatus: String = "Connecting..."
 
     private var connection: NSXPCConnection?
     private var agent: NetworkMonitorAgentProtocol?
 
     func connect() {
         guard connection == nil else {
-            connectionStatus = "Already connected"
+            // Already connected or trying to connect, so just return
             return
         }
 
@@ -36,15 +36,16 @@ class XPCManager: ObservableObject {
         
         connection.invalidationHandler = {
             DispatchQueue.main.async {
-                self.connectionStatus = "Connection invalidated"
+                self.connectionStatus = "Agent connection lost. Reconnecting..."
                 self.connection = nil
                 self.agent = nil
+                // Optional: add retry logic here
             }
         }
         
         connection.interruptionHandler = {
             DispatchQueue.main.async {
-                self.connectionStatus = "Connection interrupted"
+                self.connectionStatus = "Agent connection interrupted."
             }
         }
 
@@ -53,13 +54,17 @@ class XPCManager: ObservableObject {
 
         self.agent = connection.remoteObjectProxyWithErrorHandler { error in
             DispatchQueue.main.async {
-                self.connectionStatus = "Error: \(error.localizedDescription)"
+                self.connectionStatus = "Unable to connect to Network Monitor"
             }
         } as? NetworkMonitorAgentProtocol
 
         if self.agent != nil {
             DispatchQueue.main.async {
                 self.connectionStatus = "Connected"
+            }
+        } else {
+             DispatchQueue.main.async {
+                self.connectionStatus = "Unable to connect to Network Monitor"
             }
         }
     }
@@ -72,7 +77,7 @@ class XPCManager: ObservableObject {
 
     func fetchLatestSample() {
         guard let agent = self.agent else {
-            connectionStatus = "Not connected to agent"
+            connectionStatus = "Unable to connect to Network Monitor"
             return
         }
 
@@ -96,7 +101,7 @@ class XPCManager: ObservableObject {
     
     func fetchSamples(from startDate: Date, to endDate: Date) {
         guard let agent = self.agent else {
-            connectionStatus = "Not connected to agent"
+            connectionStatus = "Unable to connect to Network Monitor"
             return
         }
         
@@ -114,7 +119,7 @@ class XPCManager: ObservableObject {
     
     func fetchAggregatedSamples(from startDate: Date, to endDate: Date, intervalType: String, metricType: String) {
         guard let agent = self.agent else {
-            connectionStatus = "Not connected to agent"
+            connectionStatus = "Unable to connect to Network Monitor"
             return
         }
         
@@ -145,7 +150,7 @@ class XPCManager: ObservableObject {
     
     func updateNotificationConfiguration(configuration: NotificationConfigurationDTO) {
         guard let agent = self.agent else {
-            connectionStatus = "Not connected to agent"
+            connectionStatus = "Unable to connect to Network Monitor"
             return
         }
         do {
