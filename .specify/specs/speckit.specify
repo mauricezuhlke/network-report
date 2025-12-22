@@ -73,11 +73,11 @@ Acceptance Scenarios:
 
 ### Functional Requirements
 
-- **FR-001**: Collect periodic network measurements: ICMP/TCP latency, packet loss (sampled), jitter, and throughput estimates (upload/download) at configurable intervals (default: 1 minute).
-- **FR-002**: Persist time-series samples locally for at least 30 days by default; older data may be aggregated (retention policy, see NFRs).
+- **FR-001**: Collect periodic network measurements: ICMP/TCP latency, packet loss (sampled), jitter, and throughput estimates (upload/download) at configurable intervals (default: 1 minute). *(Initial focus: latency and packet loss)*
+- **FR-002**: Persist time-series samples locally for at least 30 days by default; older data may be aggregated (retention policy, see NFRs). *(Implementation: SQLite)*
 - **FR-003**: Render interactive charts that support selectable ranges: last hour, last 24 hours, last 7 days, last 30 days, and custom date/time seek.
 - **FR-004**: Provide a time-picker to jump to a specific day/time and show a focused window (e.g., ±15 minutes) of per-sample details.
-- **FR-005**: Exportable incident report: generate a concise PDF/CSV summary for a selected time window suitable for sharing with ISP (includes timestamps, metrics, and optional diagnostics).
+- **FR-005**: Exportable incident report: generate a concise PDF/CSV summary for a selected time window suitable for sharing with ISP (includes timestamps, metrics, and optional diagnostics). *(Priority: P3, deferred)*
 - **FR-006**: Run background service/agent with minimal resource footprint; provide user controls to pause/resume monitoring and to set sampling frequency.
 - **FR-007**: Optional secure cloud sync (opt-in) — syncing must be encrypted in transit and at rest; sync must not expose or scan local network devices.
 - **FR-008**: Provide settings for data retention, sampling frequency, and privacy options (no data collection, local-only, opt-in sync).
@@ -117,10 +117,10 @@ Acceptance Scenarios:
 
 ## Implementation Guidance
 
-- Sampling: Use lightweight probes — prefer TCP connect timing and ICMP where permitted; for throughput, do short, low-impact measurements or rely on passive estimation where possible.
+- Sampling: Use lightweight probes — prefer TCP connect timing and ICMP where permitted; for throughput, do short, low-impact measurements or rely on passive estimation where possible. *(Initial target: default gateway or public DNS (e.g., 8.8.8.8))*
 - Aggregation: Store raw samples for recent window (e.g., 7 days), then rollup to 5m/1h/1d resolutions to bound storage.
 - Background agent: Implement as OS-native background process/service with platform-specific optimizations for memory and power. Use efficient data structures, memory pooling, and minimal dependencies.
-- UI: Use an interactive charting library that supports zooming, panning, and point inspection with sparse rendering for long ranges (virtualized rendering).
+- UI: Use an interactive charting library that supports zooming, panning, and point inspection with sparse rendering for long ranges (virtualized rendering). *(Recommendation: Use native SwiftUI Charts framework)*
 - Export: Include an option to redact identifying metadata before export; include a short human-readable summary for ISP reports.
 
 ## Testing & QA
