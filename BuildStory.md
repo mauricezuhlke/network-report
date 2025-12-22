@@ -24,3 +24,15 @@ This hybrid approach allowed us to leverage the strengths of both human develope
 After creating the XPC service, your project will have a new folder for the service. This includes:
 - **DemoServiceProtocol.swift**: Defines the API that the service will expose.
 - **main.swift**: Contains the code to accept incoming connections.
+
+
+## How to test the XPC service integration
+We want to test the XPC service integration to ensure that the SwiftUI app can communicate with the XPC service correctly. We don't want to make a huge number of changes to the existing codebase, so we will create a simple test case that verifies the communication between the app and the service.
+
+### Step 1: Define the Test Case
+
+1. Our prompt to Gemini is as follows : 
+> the first feature is a small MVP to implement the XPC service in the MacOS base project we've created in the NetworkReporter/ folder. You will use the smallest and most focused code changes to verfiy that the MacOS app is communicating with the XPC service and vice-versa. Tell me your plan before you implement.
+2. Fix the build errors in the generated code.
+> 
+

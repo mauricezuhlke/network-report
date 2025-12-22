@@ -6,78 +6,58 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
+    @State private var timestamp: Date?
+    @State private var errorMessage: String?
 
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
-                    }
-                }
-                .onDelete(perform: deleteItems)
+        VStack {
+            if let timestamp = timestamp {
+                Text("Timestamp from service: \(timestamp, formatter: itemFormatter)")
+            } else if let errorMessage = errorMessage {
+                Text("Error: \(errorMessage)")
+            } else {
+                Text("No response yet")
             }
-            .toolbar {
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-            Text("Select an item")
+        }
+        .padding()
+
+        Button("Get Timestamp") {
+            callXPCService()
         }
     }
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+    private func callXPCService() {
+        let connection = NSXPCConnection(serviceName: "maro.NetworkReporterService")
+        connection.remoteObjectInterface = NSXPCInterface(with: NetworkReporterServiceProtocol.self)
+        connection.resume()
 
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        if let proxy = connection.remoteObjectProxy as? NetworkReporterServiceProtocol {
+            proxy.getTimestamp { response in
+                DispatchQueue.main.async {
+                    self.timestamp = response
+                    self.errorMessage = nil
+                }
+                connection.invalidate()
             }
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        } else {
+            DispatchQueue.main.async {
+                self.errorMessage = "Failed to create proxy"
+                self.timestamp = nil
             }
+            connection.invalidate()
         }
     }
 }
 
 private let itemFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
+    formatter.dateStyle = .long
+    formatter.timeStyle = .long
     return formatter
 }()
 
 #Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    ContentView()
 }

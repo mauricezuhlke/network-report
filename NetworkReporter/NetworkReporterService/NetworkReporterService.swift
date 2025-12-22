@@ -11,8 +11,8 @@ import Foundation
 class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
     
     /// This implements the example protocol. Replace the body of this class with the implementation of this service's protocol.
-    @objc func performCalculation(firstNumber: Int, secondNumber: Int, with reply: @escaping (Int) -> Void) {
-        let response = firstNumber + secondNumber
+    @objc func getTimestamp(with reply: @escaping (Date) -> Void) {
+        let response = Date()
         reply(response)
     }
 }
