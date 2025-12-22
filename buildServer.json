@@ -12,8 +12,8 @@
 	"argv": [
 		"/opt/homebrew/bin/xcode-build-server"
 	],
-	"workspace": "/Users/maro/Documents/Projects/SDD/network-report/SpeckitNetworkMonitor/SpeckitNetworkMonitor.xcodeproj/project.xcworkspace",
-	"build_root": "/Users/maro/Library/Developer/Xcode/DerivedData/SpeckitNetworkMonitor-elphwnredsugxpeojqehlgbzmihj",
-	"scheme": "SpeckitNetworkMonitor",
+	"workspace": "/Users/maro/Documents/Projects/SDD/network-report/NetworkReporter/NetworkReporter.xcodeproj/project.xcworkspace",
+	"build_root": "/Users/maro/Library/Developer/Xcode/DerivedData/NetworkReporter-fmuynlqbjpergsgvcxtkhqrmabum",
+	"scheme": "NetworkReporter",
 	"kind": "xcode"
 }
