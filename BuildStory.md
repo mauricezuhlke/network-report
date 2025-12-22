@@ -34,5 +34,5 @@ We want to test the XPC service integration to ensure that the SwiftUI app can c
 1. Our prompt to Gemini is as follows : 
 > the first feature is a small MVP to implement the XPC service in the MacOS base project we've created in the NetworkReporter/ folder. You will use the smallest and most focused code changes to verfiy that the MacOS app is communicating with the XPC service and vice-versa. Tell me your plan before you implement.
 2. Fix the build errors in the generated code.
-> 
+> update the code so that when I press the button in the app, I get a timestamped response from the XPC client. I want to be sure that what i'm seeing is a connection between the two apps and the interface is working.
 
