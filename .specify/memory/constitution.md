@@ -10,6 +10,7 @@ Purpose
 - **Test-First Mindset**: Tests define expected behavior. New features and fixes should be accompanied by tests that assert the intended outcomes.
 - **Design for Evolution**: Structure systems to make common changes easy and low-risk. Embrace modularity, clear boundaries, and well-defined contracts.
 - **Measure & Verify**: Rely on automated checks and metrics rather than intuition when making performance or correctness decisions.
+- **Small, Incremental Changes**: Favor small, incremental changes that can be reviewed, tested, and deployed quickly over large, monolithic updates.
 
 ## 2. Code Quality & Maintainability
 
