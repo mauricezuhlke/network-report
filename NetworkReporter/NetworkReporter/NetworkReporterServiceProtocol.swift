@@ -10,22 +10,27 @@ import Foundation
 /// The protocol that this service will vend as its API. This protocol will also need to be visible to the process hosting the service.
 @objc protocol NetworkReporterServiceProtocol {
     
-    /// This function returns the current timestamp from the XPC service.
-    func getTimestamp(with reply: @escaping (Date) -> Void)
+    /// This function requests the current timestamp from the XPC service.
+    /// It returns an ISO 8601 formatted string or an Error.
+    func getTimestamp(with reply: @escaping (String?, Error?) -> Void)
 }
 
 /*
  To use the service from an application or other process, use NSXPCConnection to establish a connection to the service by doing something like this:
 
-     connectionToService = NSXPCConnection(serviceName: "maro.NetworkReporterService")
-     connectionToService.remoteObjectInterface = NSXPCInterface(with: (any NetworkReporterServiceProtocol).self)
-     connectionTo-service.resume()
+     let connectionToService = NSXPCConnection(serviceName: "com.example.NetworkReporter.NetworkReporterService")
+     connectionToService.remoteObjectInterface = NSXPCInterface(with: NetworkReporterServiceProtocol.self)
+     connectionToService.resume()
 
  Once you have a connection to the service, you can use it like this:
 
      if let proxy = connectionToService.remoteObjectProxy as? NetworkReporterServiceProtocol {
-         proxy.getTimestamp { timestamp in
-             NSLog("Timestamp from service: \(timestamp)")
+         proxy.getTimestamp { timestampString, error in
+             if let error = error {
+                 NSLog("Error from service: \(error)")
+             } else if let timestampString = timestampString {
+                 NSLog("Timestamp from service: \(timestampString)")
+             }
          }
      }
 

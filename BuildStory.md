@@ -6,6 +6,12 @@ So we pivoted to a new approach: Building the baseline XPC service and SwiftUI a
 
 This hybrid approach allowed us to leverage the strengths of both human developers and AI tools. We could rely on our own expertise to design the overall architecture and user experience, while using SpecKit to handle repetitive coding tasks and generate code snippets based on detailed specifications.
 
+## Clarifications
+### Session 2025-12-24
+- Q: What is the required format for the timestamped response from the XPC service? → A: ISO 8601 String (e.g., `2025-12-24T18:30:00Z`)
+- Q: Where in the user interface should the timestamped response from the XPC service be displayed? → A: In a new Text view below the button.
+- Q: What is the expected behavior if the XPC service communication fails (e.g., service not running, connection lost)? → A: Display an error message in the UI.
+
 ## How to build the SwiftUI menu bar app with XPC service
 
 ### Creating an Xcode Project with an XPC Component
@@ -34,5 +40,4 @@ We want to test the XPC service integration to ensure that the SwiftUI app can c
 1. Our prompt to Gemini is as follows : 
 > the first feature is a small MVP to implement the XPC service in the MacOS base project we've created in the NetworkReporter/ folder. You will use the smallest and most focused code changes to verfiy that the MacOS app is communicating with the XPC service and vice-versa. Tell me your plan before you implement.
 2. Fix the build errors in the generated code.
-> update the code so that when I press the button in the app, I get a timestamped response from the XPC client. I want to be sure that what i'm seeing is a connection between the two apps and the interface is working.
-
+> update the code so that when I press the button in the app, I get a timestamped response from the XPC client in ISO 8601 format (e.g., "2025-12-24T18:30:00Z"), displayed in a new Text view below the button. If the communication fails, an error message should be displayed in the UI. I want to be sure that what i'm seeing is a connection between the two apps and the interface is working.

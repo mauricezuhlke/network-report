@@ -11,8 +11,11 @@ import Foundation
 class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
     
     /// This implements the example protocol. Replace the body of this class with the implementation of this service's protocol.
-    @objc func getTimestamp(with reply: @escaping (Date) -> Void) {
-        let response = Date()
-        reply(response)
+    @objc func getTimestamp(with reply: @escaping (String?, Error?) -> Void) {
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let timestampString = dateFormatter.string(from: Date())
+        
+        reply(timestampString, nil) // No error for successful timestamp generation
     }
 }
