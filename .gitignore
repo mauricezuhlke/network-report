@@ -1,2 +1,11 @@
 .gemini/
 .vscode/
+
+# Xcode
+.build/
+DerivedData/
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+
+# Swift Package Manager
+Packages/

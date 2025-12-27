@@ -55,6 +55,16 @@
 		4FB7B9E82EF98F8300A1A958 /* NetworkReporterService.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = NetworkReporterService.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4FB7B9F42EF98F8300A1A958 /* Exceptions for "NetworkReporterService" folder in "NetworkReporterService" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 4FB7B9E72EF98F8300A1A958 /* NetworkReporterService */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4FB7B9B72EF98F5200A1A958 /* NetworkReporter */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -73,6 +83,9 @@
 		};
 		4FB7B9E92EF98F8300A1A958 /* NetworkReporterService */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4FB7B9F42EF98F8300A1A958 /* Exceptions for "NetworkReporterService" folder in "NetworkReporterService" target */,
+			);
 			path = NetworkReporterService;
 			sourceTree = "<group>";
 		};

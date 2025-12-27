@@ -1,68 +1,50 @@
-# Project Constitution
+# [PROJECT_NAME] Constitution
+<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
 
-Purpose
-: Provide a concise, actionable set of principles and governance rules that guide technical decisions, implementation choices, and team behaviour. This document emphasizes code quality, maintainability, testing standards, user experience consistency, and performance requirements.
+## Core Principles
 
-## 1. Core Principles
+### [PRINCIPLE_1_NAME]
+<!-- Example: I. Library-First -->
+[PRINCIPLE_1_DESCRIPTION]
+<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
 
-- **Clarity & Simplicity**: Prefer readable, maintainable code over clever solutions. Code is written for humans first; machines second.
-- **Single Responsibility**: Components and modules should have one clear responsibility and a small, well-defined interface.
-- **Test-First Mindset**: Tests define expected behavior. New features and fixes should be accompanied by tests that assert the intended outcomes.
-- **Design for Evolution**: Structure systems to make common changes easy and low-risk. Embrace modularity, clear boundaries, and well-defined contracts.
-- **Measure & Verify**: Rely on automated checks and metrics rather than intuition when making performance or correctness decisions.
+### [PRINCIPLE_2_NAME]
+<!-- Example: II. CLI Interface -->
+[PRINCIPLE_2_DESCRIPTION]
+<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
 
-## 2. Code Quality & Maintainability
+### [PRINCIPLE_3_NAME]
+<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
+[PRINCIPLE_3_DESCRIPTION]
+<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
 
-- **Style & Conventions**: Adopt, document, and enforce language-specific style guides and linting rules via pre-commit hooks and CI.
-- **Small Functions & Composition**: Favor small, composable functions; long methods should be decomposed when readability or testability suffers.
-- **Separation of Concerns**: Keep domain logic, I/O, and orchestration separate to simplify testing and reuse.
-- **Dependency Hygiene**: Add external dependencies only when justified. Track versions, prune unused packages, and run periodic audits for security and license compliance.
-- **Coemmnt and Self-Documenting Code**: Strive for self-explanatory code through clear naming and structure.
-- **Commentary**: Use comments to explain the "why" behind decisions, not the "what" or "how" that should be clear from the code itself.
-- **Documentation**: Maintain concise README-level docs for modules, plus API docs for public surfaces. Document rationale for non-obvious decisions.
+### [PRINCIPLE_4_NAME]
+<!-- Example: IV. Integration Testing -->
+[PRINCIPLE_4_DESCRIPTION]
+<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
 
-## 3. Testing Standards
+### [PRINCIPLE_5_NAME]
+<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
+[PRINCIPLE_5_DESCRIPTION]
+<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
 
-- **Test Pyramid**: Maintain a balanced test suite: many unit tests, fewer integration tests, and targeted end-to-end tests for critical user flows.
-- **Coverage Targets**: Aim for high coverage on critical paths (suggested: 90%+ for core libraries), while accepting lower coverage for low-risk glue code.
-- **Deterministic Tests**: Tests must be deterministic and fast. Flaky tests are unacceptable—quarantine and fix immediately.
-- **CI Gatekeeping**: All pull requests must pass linters, unit tests, and relevant integration checks in CI before merging.
-- **Mocking & Fixtures**: Use mocks and fixtures to isolate units, but prefer integration tests to validate contracts between modules and services.
-- **Test Ownership**: Code owners are responsible for maintaining tests for their modules and responding quickly to regressions.
+## [SECTION_2_NAME]
+<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
 
-## 4. User Experience Consistency
+[SECTION_2_CONTENT]
+<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
 
-- **Design System & Tokens**: Use a shared design system (tokens and components) to enforce consistent spacing, typography, color, and interaction patterns.
-- **Accessibility by Default**: Follow WCAG AA guidelines as a baseline. Accessibility checks must be part of the QA/acceptance criteria for UI changes.
-- **Predictable Patterns**: Reuse patterns for navigation, error handling, and feedback. Inconsistencies must be justified in ADRs.
-- **Localization-Ready**: Avoid hardcoded strings; structure content for easy localization and pluralization.
-- **Perceived Performance**: Optimize user-perceived latency (skeletons, progressive loading, optimistic updates) in addition to raw performance metrics.
+## [SECTION_3_NAME]
+<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
 
-## 5. Performance Requirements
+[SECTION_3_CONTENT]
+<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
 
-- **Profile Before Optimize**: Use profiling to identify hotspots; prioritize fixes that yield measurable, user-facing gains.
-- **Graceful Degradation**: Design for failure modes—provide fallback behaviors for degraded network or resource constraints.
+## Governance
+<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-## 6. Governance & Decision-Making
+[GOVERNANCE_RULES]
+<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
 
-- **Principle-First Decisions**: Use this constitution as the primary lens for evaluating technical trade-offs. When in doubt, prefer the option that better satisfies these principles.
-- **Ownership Model**: Assign clear owners to modules and services. Owners approve cross-cutting changes and are accountable for maintenance, dependency updates, and documentation.
-- **Architecture Decision Records (ADRs)**: For significant technical choices, create an ADR that states intent, alternatives considered, consequences, and migration strategy. ADRs should be short, linked from the relevant module, and reviewed by affected owners.
-- **Review Requirements**: All changes require code review. Cross-cutting changes require approval from at least one owner in the impacted area. Enforce via branch protection rules where possible.
-
-## 7. Implementation Guidance
-
-- **Default Tooling**: Prefer well-adopted, actively maintained tools with clear upgrade paths. Standardize tooling across the org to reduce cognitive overhead.
-- **Small, Reversible Changes**: Ship increments behind feature flags when possible to reduce blast radius and allow controlled rollouts.
-- **Automate Checks**: Automate formatting, linting, dependency updates, security scans, and basic performance checks in CI.
-- **Onboarding Checklist**: New contributors should: clone the repo, run linters and tests locally, read module READMEs, and meet module owners.
-
-
-
-## Appendix — Quick Checklists
-
-- **PR Checklist**: Linted, Tests passing, Docs updated (if public API changed), Performance considered, Accessibility checked (if UI), Reviewer(s) assigned, ADR referenced (if applicable).
-- **Release Checklist**: CI green, Staging smoke tests passed, Performance smoke tests within budget, Monitoring/alerts configured and verified, Rollback plan in place.
-
-**Version**: 1.0 | **Ratified**: [2025-12-12] | **Last Amended**: [2025-12-12]
-
+**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
+<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
