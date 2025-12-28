@@ -55,7 +55,10 @@ struct PacketLossChart: View {
             )
             .interpolationMethod(.catmullRom)
             .foregroundStyle(connectivityStatusColor(for: record.connectivityStatus_.description))
-            .symbol(by: .value("Status", record.connectivityStatus_.description)) // FIX: Use by: parameter
+            .symbol(
+                record.connectivityStatus_ == .connected ? .circle :
+                (record.connectivityStatus_ == .degraded ? .triangle : .square)
+            )
             
             // Add point marks for individual data points
             PointMark(
@@ -63,7 +66,10 @@ struct PacketLossChart: View {
                 y: .value("Packet Loss (%)", record.packetLoss * 100)
             )
             .foregroundStyle(connectivityStatusColor(for: record.connectivityStatus_.description))
-            .symbol(by: .value("Status", record.connectivityStatus_.description)) // FIX: Use by: parameter
+            .symbol(
+                record.connectivityStatus_ == .connected ? .circle :
+                (record.connectivityStatus_ == .degraded ? .triangle : .square)
+            )
             .opacity(records.count < 50 ? 1 : 0) // Show points only if not too many records
         }
         // Add a reference line for high packet loss threshold
@@ -86,14 +92,15 @@ struct PacketLossChart: View {
         }
     }
 
-    private func connectivityStatusSymbol(for status: String) -> any ChartSymbolShape { // FIX: Added 'any'
-        switch status {
-        case ConnectivityStatus.connected.description: return .circle
-        case ConnectivityStatus.degraded.description: return .triangle
-        case ConnectivityStatus.disconnected.description: return .square
-        default: return .circle
-        }
-    }
+    // Removed connectivityStatusSymbol function
+    // private func connectivityStatusSymbol(for status: String) -> any ChartSymbolShape {
+    //     switch status {
+    //     case ConnectivityStatus.connected.description: return .circle
+    //     // case ConnectivityStatus.degraded.description: return .triangle // Redundant
+    //     // case ConnectivityStatus.disconnected.description: return .square // Redundant
+    //     default: return .circle
+    //     }
+    // }
 
     @ViewBuilder
     private func axisValueLabelContent(for value: AxisValue) -> some View {

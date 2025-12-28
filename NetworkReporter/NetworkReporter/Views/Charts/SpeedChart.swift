@@ -114,7 +114,7 @@ struct SpeedChart: View {
         }
     }
 
-    // Removed connectivityStatusSymbol function
+    // This helper function is now unused for symbols, but might be useful for other things.
     // private func connectivityStatusSymbol(for status: String) -> any ChartSymbolShape {
     //     switch status {
     //     case ConnectivityStatus.connected.description: return .circle
