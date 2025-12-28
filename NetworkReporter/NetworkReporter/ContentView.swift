@@ -6,30 +6,41 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct ContentView: View {
-    @StateObject private var viewModel = ContentViewModel()
+    @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject var xpcClient: XPCClient // Injected from NetworkReporterApp
+    @StateObject private var viewModel = ContentViewModel() // Owns view-specific state
 
     var body: some View {
-        VStack {
-            if let timestamp = viewModel.timestamp {
-                Text("Timestamp from service: \(timestamp)")
-            } else if let errorMessage = viewModel.errorMessage {
-                Text("Error: \(errorMessage)")
-            } else {
-                Text("No response yet")
+        NavigationView { // Added NavigationView for potential future navigation
+            VStack {
+                RealTimeNetworkView()
+                    .padding(.bottom)
+                
+                // Display error messages from ViewModel
+                if let errorMessage = viewModel.errorMessage {
+                    Text("Error: \(errorMessage)")
+                        .foregroundColor(.red)
+                }
+                
+                Spacer()
             }
-        }
-        .padding()
-
-        Button("Get Timestamp") {
-            Task {
-                await viewModel.fetchTimestamp()
+            .padding()
+            .onAppear {
+                // Set up the observer for XPCClient's latest data
+                viewModel.observeXPCClient(xpcClient)
             }
+            .navigationTitle("Network Monitor")
         }
     }
 }
 
-#Preview {
-    ContentView()
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+            .environmentObject(XPCClient(persistenceController: PersistenceController.preview)) // Provide XPCClient for preview
+    }
 }

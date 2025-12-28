@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NetworkReporterShared // FIX: For NetworkReporterServiceProtocol and NetworkReporterClientProtocol
 
 class ServiceDelegate: NSObject, NSXPCListenerDelegate {
     
@@ -19,6 +20,14 @@ class ServiceDelegate: NSObject, NSXPCListenerDelegate {
         // Next, set the object that the connection exports. All messages sent on the connection to this service will be sent to the exported object to handle. The connection retains the exported object.
         let exportedObject = NetworkReporterService()
         newConnection.exportedObject = exportedObject
+        
+        // Also, set the interface that the *client* exports (for reverse communication).
+        newConnection.remoteObjectInterface = NSXPCInterface(with: (any NetworkReporterClientProtocol).self)
+
+        // Obtain the proxy to the client's exported object and provide it to the service.
+        exportedObject.client = newConnection.remoteObjectProxyWithErrorHandler { error in
+            NSLog("Error accessing client proxy: \(error)")
+        } as? NetworkReporterClientProtocol
         
         // Resuming the connection allows the system to deliver more incoming messages.
         newConnection.resume()

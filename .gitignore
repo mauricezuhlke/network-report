@@ -9,3 +9,10 @@ DerivedData/
 
 # Swift Package Manager
 Packages/
+*.swiftpm/
+
+# General
+*.tmp
+*.log
+.env*
+.DS_Store

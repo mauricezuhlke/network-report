@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4FB7B9F32EF98F8300A1A958 /* NetworkReporterService.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 4FB7B9E82EF98F8300A1A958 /* NetworkReporterService.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4FFCB5DC2F00530E005467CB /* NetworkReporterShared in Frameworks */ = {isa = PBXBuildFile; productRef = 4FFCB5DB2F00530E005467CB /* NetworkReporterShared */; };
+		4FFCB5DE2F005338005467CB /* NetworkReporterShared in Frameworks */ = {isa = PBXBuildFile; productRef = 4FFCB5DD2F005338005467CB /* NetworkReporterShared */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FFCB5DC2F00530E005467CB /* NetworkReporterShared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,6 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FFCB5DE2F005338005467CB /* NetworkReporterShared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,6 +134,7 @@
 				4FB7B9CA2EF98F5400A1A958 /* NetworkReporterTests */,
 				4FB7B9D42EF98F5400A1A958 /* NetworkReporterUITests */,
 				4FB7B9E92EF98F8300A1A958 /* NetworkReporterService */,
+				4FFCB5DA2F00530E005467CB /* Frameworks */,
 				4FB7B9B62EF98F5200A1A958 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -143,6 +148,13 @@
 				4FB7B9E82EF98F8300A1A958 /* NetworkReporterService.xpc */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		4FFCB5DA2F00530E005467CB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -167,6 +179,7 @@
 			);
 			name = NetworkReporter;
 			packageProductDependencies = (
+				4FFCB5DB2F00530E005467CB /* NetworkReporterShared */,
 			);
 			productName = NetworkReporter;
 			productReference = 4FB7B9B52EF98F5200A1A958 /* NetworkReporter.app */;
@@ -235,6 +248,7 @@
 			);
 			name = NetworkReporterService;
 			packageProductDependencies = (
+				4FFCB5DD2F005338005467CB /* NetworkReporterShared */,
 			);
 			productName = NetworkReporterService;
 			productReference = 4FB7B9E82EF98F8300A1A958 /* NetworkReporterService.xpc */;
@@ -275,6 +289,9 @@
 			);
 			mainGroup = 4FB7B9AC2EF98F5200A1A958;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4FFCB5D92F0052E2005467CB /* XCLocalSwiftPackageReference "NetworkReporterShared" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4FB7B9B62EF98F5200A1A958 /* Products */;
 			projectDirPath = "";
@@ -734,6 +751,26 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		4FFCB5D92F0052E2005467CB /* XCLocalSwiftPackageReference "NetworkReporterShared" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = NetworkReporterShared;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4FFCB5DB2F00530E005467CB /* NetworkReporterShared */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4FFCB5D92F0052E2005467CB /* XCLocalSwiftPackageReference "NetworkReporterShared" */;
+			productName = NetworkReporterShared;
+		};
+		4FFCB5DD2F005338005467CB /* NetworkReporterShared */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4FFCB5D92F0052E2005467CB /* XCLocalSwiftPackageReference "NetworkReporterShared" */;
+			productName = NetworkReporterShared;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4FB7B9AD2EF98F5200A1A958 /* Project object */;
 }

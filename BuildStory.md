@@ -41,3 +41,12 @@ We want to test the XPC service integration to ensure that the SwiftUI app can c
 > the first feature is a small MVP to implement the XPC service in the MacOS base project we've created in the NetworkReporter/ folder. You will use the smallest and most focused code changes to verfiy that the MacOS app is communicating with the XPC service and vice-versa. Tell me your plan before you implement.
 2. Fix the build errors in the generated code.
 > update the code so that when I press the button in the app, I get a timestamped response from the XPC client in ISO 8601 format (e.g., "2025-12-24T18:30:00Z"), displayed in a new Text view below the button. If the communication fails, an error message should be displayed in the UI. I want to be sure that what i'm seeing is a connection between the two apps and the interface is working.
+
+## How to build the app using SpecKit and Gemini
+1. First, we set up the SpecKit configuration to define the specifications for our XPC
+service and SwiftUI app.
+2. Next, we used Gemini to generate the initial codebase based on our specifications.
+3. We then manually built the baseline XPC service and SwiftUI app, ensuring that the
+
+For the implementation, we used the following prompt:
+> Run the following build command: xcodebuild -scheme NetworkReporter -configuration Debug -workspace /Users/XYZ/Documents/Projects/SDD/network-report/NetworkReporter/NetworkReporter.xcodeproj/project.xcworkspace -destination platform\=macOS\,arch\=arm64 -allowProvisioningUpdates build. If the build fails, analyse the error output, identify the incorrect code in my files, and apply the fixes automatically, then re-issue the build command. You may only stop this loop when the application builds successfully.
