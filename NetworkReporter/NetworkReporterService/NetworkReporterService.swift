@@ -27,10 +27,10 @@ enum NetworkReporterServiceError: Error, LocalizedError {
 class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
     
     // Reference to the client's exported object, for reverse communication
-    var client: NetworkReporterClientProtocol?
+    weak var client: NetworkReporterClientProtocol?
 
     private var isMonitoring = false
-    private var monitoringTimer: Timer?
+    private var monitoringTimer: DispatchSourceTimer?
     private var lastMeasuredPerformance: [String: Any]? // Stores last measured data
     
     // NWPathMonitor for network reachability
@@ -70,34 +70,34 @@ class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
         NSLog("NetworkReporterService: Monitoring started.")
 
         // Invalidate any existing timer
-        monitoringTimer?.invalidate()
+        monitoringTimer?.cancel()
         // Start a timer to periodically call _measureNetworkPerformance()
-        // Use the monitorQueue for the timer to ensure it runs in the background
-        monitorQueue.async {
-            self.monitoringTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
-                guard let self = self else { return }
-                let record = self._measureNetworkPerformance()
-                self.lastMeasuredPerformance = record
-                NSLog("NetworkReporterService: Measured performance record: \(record["timestamp"] ?? "N/A"), client is nil: \(self.client == nil)")
-                if self.client == nil {
-                    NSLog("NetworkReporterService: Client proxy is nil. Cannot send performance record.")
-                }
-                // Send the record to the client
-                self.client?.handlePerformanceRecord(record) // This call still needs to be on the client's thread/runloop
+        let timer = DispatchSource.makeTimerSource(queue: monitorQueue)
+        timer.schedule(deadline: .now(), repeating: 5.0)
+        timer.setEventHandler { [weak self] in
+            guard let self = self else { return }
+            let record = self._measureNetworkPerformance()
+            self.lastMeasuredPerformance = record
+            NSLog("NetworkReporterService: Measured performance record: \(record["timestamp"] ?? "N/A"), client is nil: \(self.client == nil)")
+            if self.client == nil {
+                NSLog("NetworkReporterService: Client proxy is nil. Cannot send performance record.")
             }
-            RunLoop.current.add(self.monitoringTimer!, forMode: .common)
-            RunLoop.current.run() // Keep the runloop alive for the timer
+            // Send the record to the client
+            self.client?.handlePerformanceRecord(record) // This call still needs to be on the client's thread/runloop
         }
+        timer.resume()
+        monitoringTimer = timer
+        
         reply(nil)
     }
 
     @objc func stopMonitoring(with reply: @escaping (Error?) -> Void) {
-        guard !isMonitoring else {
+        guard isMonitoring else {
             reply(nil) // Not monitoring
             return
         }
         isMonitoring = false
-        monitoringTimer?.invalidate()
+        monitoringTimer?.cancel()
         monitoringTimer = nil
         NSLog("NetworkReporterService: Monitoring stopped.")
         reply(nil)

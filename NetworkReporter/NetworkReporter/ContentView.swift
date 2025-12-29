@@ -16,18 +16,18 @@ struct ContentView: View {
     var body: some View {
         NavigationView { // Added NavigationView for potential future navigation
             VStack {
-                RealTimeNetworkView()
+                RealTimeNetworkView(realTimeRecord: viewModel.realTimeRecord) // Pass record from ViewModel
                     .padding(.bottom)
 
                 // UI Feedback for network sampling status
                 HStack {
                     Text("Service Status: ")
                         .font(.subheadline)
-                    Text(xpcClient.isServiceConnected ? "Connected" : "Disconnected")
+                    Text(viewModel.connectionStatus) // Use ViewModel's connectionStatus
                         .font(.subheadline)
                         .foregroundColor(xpcClient.isServiceConnected ? .green : .red)
                 }
-                if let latestRecord = xpcClient.latestPerformanceRecord {
+                if let latestRecord = viewModel.realTimeRecord { // Use ViewModel's realTimeRecord
                     Text("Last Sample: \(latestRecord.timestamp ?? Date(), formatter: Self.dateFormatter)")
                         .font(.subheadline)
                         .foregroundColor(.gray)

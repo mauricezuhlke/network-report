@@ -9,20 +9,20 @@ import SwiftUI
 import NetworkReporterShared // FIX: For ConnectivityStatus.description
 
 struct RealTimeNetworkView: View {
-    @EnvironmentObject var xpcClient: XPCClient
+    var realTimeRecord: NetworkPerformanceRecord? // Receive record directly
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Real-Time Network Status")
                 .font(.headline)
             
-            if let record = xpcClient.latestPerformanceRecord {
+            if let record = realTimeRecord {
                 MetricRow(label: "Status", value: record.connectivityStatus_.description)
                 MetricRow(label: "Latency", value: String(format: "%.0f ms", record.latency))
                 MetricRow(label: "Packet Loss", value: String(format: "%.2f%%", record.packetLoss * 100))
                 MetricRow(label: "Upload Speed", value: String(format: "%.1f Mbps", record.uploadSpeed))
                 MetricRow(label: "Download Speed", value: String(format: "%.1f Mbps", record.downloadSpeed))
-                Text("Last updated: \(record.timestamp_, formatter: itemFormatter)")
+                Text("Last updated: \(record.timestamp ?? Date(), formatter: itemFormatter)") // Use record.timestamp directly
                     .font(.caption)
                     .foregroundColor(.gray)
             } else {
@@ -58,7 +58,6 @@ struct MetricRow: View {
 
 struct RealTimeNetworkView_Previews: PreviewProvider {
     static var previews: some View {
-        RealTimeNetworkView()
-            .environmentObject(XPCClient(persistenceController: PersistenceController.preview))
+        RealTimeNetworkView(realTimeRecord: nil) // Provide a nil record for initial preview state
     }
 }

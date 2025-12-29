@@ -27,11 +27,15 @@ class ContentViewModel: ObservableObject {
         xpcClientCancellable = client.$latestPerformanceRecord
             .receive(on: DispatchQueue.main)
             .sink { [weak self] record in
+                let formattedTimestamp = ContentViewModel.dateFormatter.string(from: record?.timestamp ?? Date())
+                NSLog("ContentViewModel: Received latestPerformanceRecord from XPCClient: \(formattedTimestamp)")
                 self?.realTimeRecord = record
                 if let record = record {
                     self?.connectionStatus = record.connectivityStatus_.description
+                    NSLog("ContentViewModel: Updated connectionStatus to: \(record.connectivityStatus_.description)")
                 } else {
                     self?.connectionStatus = "No data yet"
+                    NSLog("ContentViewModel: Updated connectionStatus to: No data yet")
                 }
             }
     }
@@ -50,4 +54,11 @@ class ContentViewModel: ObservableObject {
             }
         }
     }
+
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .medium
+        return formatter
+    }()
 }

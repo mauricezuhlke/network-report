@@ -40,6 +40,6 @@ public enum ConnectivityStatus: Int16, CaseIterable, Identifiable, CustomStringC
 }
 
 // MARK: - NetworkReporterClientProtocol (Service calls Client)
-@objc public protocol NetworkReporterClientProtocol {
+@objc public protocol NetworkReporterClientProtocol: NSObjectProtocol {
     func handlePerformanceRecord(_ record: [String: Any])
 }
