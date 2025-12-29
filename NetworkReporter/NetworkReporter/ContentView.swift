@@ -11,23 +11,31 @@ import CoreData
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var xpcClient: XPCClient // Injected from NetworkReporterApp
-    @StateObject private var viewModel = ContentViewModel() // Owns view-specific state
 
     var body: some View {
         NavigationView { // Added NavigationView for potential future navigation
             VStack {
-                RealTimeNetworkView(realTimeRecord: viewModel.realTimeRecord) // Pass record from ViewModel
+                RealTimeNetworkView(recentRecords: xpcClient.recentPerformanceRecords) // Pass recent records directly
                     .padding(.bottom)
 
                 // UI Feedback for network sampling status
                 HStack {
                     Text("Service Status: ")
                         .font(.subheadline)
-                    Text(viewModel.connectionStatus) // Use ViewModel's connectionStatus
+                    Text(xpcClient.isServiceConnected ? "Connected" : "Disconnected")
                         .font(.subheadline)
                         .foregroundColor(xpcClient.isServiceConnected ? .green : .red)
                 }
-                if let latestRecord = viewModel.realTimeRecord { // Use ViewModel's realTimeRecord
+                
+                // Display error messages from XPCClient
+                if let error = xpcClient.currentError {
+                    Text("Error: \(error.localizedDescription)")
+                        .foregroundColor(.red)
+                        .font(.subheadline)
+                        .padding(.top, 5)
+                }
+
+                if let latestRecord = xpcClient.latestPerformanceRecord { // Use XPCClient's latest record
                     Text("Last Sample: \(latestRecord.timestamp ?? Date(), formatter: Self.dateFormatter)")
                         .font(.subheadline)
                         .foregroundColor(.gray)
@@ -37,19 +45,9 @@ struct ContentView: View {
                         .foregroundColor(.gray)
                 }
                 
-                // Display error messages from ViewModel
-                if let errorMessage = viewModel.errorMessage {
-                    Text("Error: \(errorMessage)")
-                        .foregroundColor(.red)
-                }
-                
                 Spacer()
             }
             .padding()
-            .onAppear {
-                // Set up the observer for XPCClient's latest data
-                viewModel.observeXPCClient(xpcClient)
-            }
             .navigationTitle("Network Monitor")
         }
     }

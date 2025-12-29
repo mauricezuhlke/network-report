@@ -58,5 +58,9 @@ struct NetworkReporterApp: App {
                 NSLog("Unknown scene phase.")
             }
         }
+        
+        Settings {
+            SettingsView()
+        }
     }
 }
