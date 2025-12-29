@@ -25,6 +25,14 @@ description: "Task list template for feature implementation"
 - **Mobile**: `api/src/`, `ios/src/` or `android/src/`
 - Paths shown below assume single project - adjust based on plan.md structure
 
+## Constitution Alignment
+
+*   [ ] **Iterative Development:** Are the tasks broken down into small, incremental steps?
+*   [ ] **Code Readability:** Are there tasks for adding comments and ensuring clear naming?
+*   [ ] **Comprehensive Testing:** Are there tasks for writing unit, integration, and end-to-end tests?
+*   [ ] **Decision Logging:** Is there a task for documenting the decisions made during implementation?
+*   [ ] **Working Software:** Does the task list reflect the `implement -> build -> review -> implement` loop?
+
 <!-- 
   ============================================================================
   IMPORTANT: The tasks below are SAMPLE TASKS for illustration purposes only.

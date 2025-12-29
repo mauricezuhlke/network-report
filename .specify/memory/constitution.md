@@ -1,50 +1,49 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Network Reporter Constitution
+
+<!--
+- Version change: 0.0.0 -> 1.0.0
+- List of modified principles: All principles updated
+- Added sections: None
+- Removed sections: None
+- Templates requiring updates:
+  - .specify/templates/plan-template.md (✅ updated)
+  - .specify/templates/spec-template.md (✅ updated)
+  - .specify/templates/tasks-template.md (✅ updated)
+- Follow-up TODOs: None
+-->
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Iterative Development
+We build software in small, incremental steps. Each change should be a self-contained unit of work that can be independently built, tested, and reviewed. This approach allows us to deliver value quickly, reduce risk, and adapt to changing requirements.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Code Readability
+Our code is written to be understood by humans. We use clear and consistent naming conventions, and we add comments to explain the "why" behind complex logic, not just the "what." The goal is to make our codebase accessible and maintainable for everyone.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Comprehensive Testing
+We strive for a test coverage of over 90%. This is a non-negotiable requirement for all new code. We use a combination of unit, integration, and end-to-end tests to ensure that our software is correct, reliable, and robust.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Decision Logging
+We document our architectural and design decisions. This provides a historical record of our choices and the trade-offs we made. This documentation is essential for onboarding new team members and for understanding the evolution of the system over time.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Working Software
+Our primary measure of progress is working software. We follow a tight `implement -> build -> review -> implement` loop for every change. This ensures that our codebase is always in a deployable state and that we are consistently delivering value to our users.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Development Workflow
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+Our development workflow is centered around the core principles of iterative development and working software. Each change, no matter how small, goes through the following steps:
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+1.  **Implement:** Write the code to implement the change.
+2.  **Build:** Build the software to ensure that the change compiles and does not break any existing functionality.
+3.  **Review:** Submit the change for review by another team member.
+4.  **Implement:** Address any feedback from the review and resubmit the change.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+This cycle continues until the change is approved and merged into the main branch.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution is the supreme governing document for the Network Reporter project. All other practices, policies, and procedures must be consistent with this constitution.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+Amendments to this constitution require a formal proposal, a period of review by the entire team, and a unanimous vote of approval. All changes must be documented, and a migration plan must be created if the changes affect existing code or infrastructure.
+
+**Version**: 1.0.0 | **Ratified**: 2025-12-29 | **Last Amended**: 2025-12-29

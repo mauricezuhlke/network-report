@@ -29,9 +29,11 @@
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
-
-[Gates determined based on constitution file]
+*   [ ] **Iterative Development:** Does the plan break down the feature into small, incremental steps?
+*   [ ] **Code Readability:** Does the plan account for writing clear, commented code?
+*   [ ] **Comprehensive Testing:** Does the plan include a strategy for achieving >90% test coverage?
+*   [ ] **Decision Logging:** Does the plan include a task for documenting the decisions made?
+*   [ ] **Working Software:** Does the plan follow the `implement -> build -> review -> implement` loop?
 
 ## Project Structure
 

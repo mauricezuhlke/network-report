@@ -17,3 +17,4 @@ Packages/
 .env*
 .DS_Store
 Logs/
+*.trace

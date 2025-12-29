@@ -113,3 +113,11 @@
 - **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
 - **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
 - **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
+
+## Constitution Alignment
+
+*   [ ] **Iterative Development:** How will this feature be broken down into small, incremental steps?
+*   [ ] **Code Readability:** What steps will be taken to ensure the code is clear and well-commented?
+*   [ ] **Comprehensive Testing:** What is the testing strategy for this feature to achieve >90% coverage?
+*   [ ] **Decision Logging:** Where will the design and architectural decisions for this feature be documented?
+*   [ ] **Working Software:** How will the `implement -> build -> review -> implement` loop be applied to this feature?
