@@ -40,7 +40,7 @@ class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
 
     override init() {
         super.init()
-        setupPathMonitor()
+        self.setupPathMonitor()
     }
     
     private func setupPathMonitor() {
@@ -49,7 +49,7 @@ class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
             NSLog("Network path status changed: \(path.status == .satisfied ? "Connected" : "Disconnected")")
             // Potentially inform client about connectivity change immediately
         }
-        pathMonitor.start(queue: monitorQueue)
+        self.pathMonitor.start(queue: monitorQueue)
     }
 
     /// This implements the example protocol. Replace the body of this class with the implementation of this service's protocol.
@@ -72,24 +72,27 @@ class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
         // Invalidate any existing timer
         monitoringTimer?.invalidate()
         // Start a timer to periodically call _measureNetworkPerformance()
-        // Ensure timer runs on a background thread/runloop to not block XPC
-        monitoringTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
-            guard let self = self else { return }
-            let record = self._measureNetworkPerformance()
-            self.lastMeasuredPerformance = record
-            NSLog("NetworkReporterService: Measured performance record: \(record["timestamp"] ?? "N/A"), client is nil: \(self.client == nil)")
-            if self.client == nil {
-                NSLog("NetworkReporterService: Client proxy is nil. Cannot send performance record.")
+        // Use the monitorQueue for the timer to ensure it runs in the background
+        monitorQueue.async {
+            self.monitoringTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
+                guard let self = self else { return }
+                let record = self._measureNetworkPerformance()
+                self.lastMeasuredPerformance = record
+                NSLog("NetworkReporterService: Measured performance record: \(record["timestamp"] ?? "N/A"), client is nil: \(self.client == nil)")
+                if self.client == nil {
+                    NSLog("NetworkReporterService: Client proxy is nil. Cannot send performance record.")
+                }
+                // Send the record to the client
+                self.client?.handlePerformanceRecord(record) // This call still needs to be on the client's thread/runloop
             }
-            // Send the record to the client
-            self.client?.handlePerformanceRecord(record)
+            RunLoop.current.add(self.monitoringTimer!, forMode: .common)
+            RunLoop.current.run() // Keep the runloop alive for the timer
         }
-        RunLoop.current.add(monitoringTimer!, forMode: .common) // Ensure timer works with XPC
         reply(nil)
     }
 
     @objc func stopMonitoring(with reply: @escaping (Error?) -> Void) {
-        guard isMonitoring else {
+        guard !isMonitoring else {
             reply(nil) // Not monitoring
             return
         }
@@ -121,7 +124,7 @@ class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
         var uploadSpeed = 0.0
         var downloadSpeed = 0.0
         
-        if isConnectedToInternet {
+        if isConnectedToInternet { // Use the actual network state
             latency = Double.random(in: 20...150)
             packetLoss = Double.random(in: 0...0.02)
             connectivityStatus = (latency > 100 || packetLoss > 0.01) ? ConnectivityStatus.degraded.rawValue : ConnectivityStatus.connected.rawValue
