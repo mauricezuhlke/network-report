@@ -32,7 +32,6 @@ class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
     private var isMonitoring = false
     private var monitoringTimer: Timer?
     private var lastMeasuredPerformance: [String: Any]? // Stores last measured data
-    private var historicalPerformanceBuffer: [[String: Any]] = [] // Stores historical data in a simple array
     
     // NWPathMonitor for network reachability
     private let pathMonitor = NWPathMonitor()
@@ -108,21 +107,7 @@ class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
         }
     }
 
-    @objc func getHistoricalPerformance(startDate: Date, endDate: Date, with reply: @escaping ([[String: Any]]?, Error?) -> Void) {
-        // Basic validation for dates
-        guard startDate <= endDate else {
-            reply(nil, NetworkReporterServiceError.invalidDateRange)
-            return
-        }
-        
-        let filteredHistory = historicalPerformanceBuffer.filter { recordDict in
-            if let timestamp = recordDict["timestamp"] as? Date {
-                return timestamp >= startDate && timestamp <= endDate
-            }
-            return false
-        }
-        reply(filteredHistory, nil)
-    }
+
 
     // Placeholder for actual network performance measurement
     private func _measureNetworkPerformance() -> [String: Any] {
@@ -156,8 +141,7 @@ class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
             "uploadSpeed": uploadSpeed,
             "downloadSpeed": downloadSpeed
         ]
-        // Add to historical buffer (simple in-memory for now)
-        self.historicalPerformanceBuffer.append(record)
+
         return record
     }
 }

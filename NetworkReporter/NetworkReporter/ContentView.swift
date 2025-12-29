@@ -18,6 +18,24 @@ struct ContentView: View {
             VStack {
                 RealTimeNetworkView()
                     .padding(.bottom)
+
+                // UI Feedback for network sampling status
+                HStack {
+                    Text("Service Status: ")
+                        .font(.subheadline)
+                    Text(xpcClient.isServiceConnected ? "Connected" : "Disconnected")
+                        .font(.subheadline)
+                        .foregroundColor(xpcClient.isServiceConnected ? .green : .red)
+                }
+                if let latestRecord = xpcClient.latestPerformanceRecord {
+                    Text("Last Sample: \(latestRecord.timestamp ?? Date(), formatter: Self.dateFormatter)")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                } else if xpcClient.isServiceConnected {
+                    Text("Waiting for first sample...")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
                 
                 // Display error messages from ViewModel
                 if let errorMessage = viewModel.errorMessage {
@@ -35,6 +53,13 @@ struct ContentView: View {
             .navigationTitle("Network Monitor")
         }
     }
+
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .medium
+        return formatter
+    }()
 }
 
 struct ContentView_Previews: PreviewProvider {

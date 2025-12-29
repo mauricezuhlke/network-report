@@ -173,18 +173,22 @@ final class XPCClient: NSObject, NetworkReporterClientProtocol, ObservableObject
         }
     }
     
+    // Now fetches directly from PersistenceController as XPC Service no longer holds historical data
     func getHistoricalPerformance(startDate: Date, endDate: Date) async throws -> [[String: Any]]? {
-        guard let serviceProxy = serviceProxy else {
-            throw XPCClientError.serviceDisconnected // More specific error
-        }
-        return try await withCheckedThrowingContinuation { continuation in
-            serviceProxy.getHistoricalPerformance(startDate: startDate, endDate: endDate) { historicalData, error in
-                if let error = error {
-                    continuation.resume(throwing: XPCClientError.serviceReturnedError(error))
-                } else {
-                    continuation.resume(returning: historicalData)
-                }
-            }
+        let dateInterval = DateInterval(start: startDate, end: endDate) // Convert Range<Date> to DateInterval
+        let records = try persistenceController.fetchRecords(for: dateInterval) // Mark as try since fetchRecords can throw
+        return records.map { record in
+            // Map NetworkPerformanceRecord (CoreData object) to a dictionary
+            // This should mirror the structure returned by _measureNetworkPerformance in the service
+            return [
+                "id": record.id?.uuidString ?? UUID().uuidString,
+                "timestamp": record.timestamp ?? Date(),
+                "latency": record.latency,
+                "packetLoss": record.packetLoss,
+                "connectivityStatus": record.connectivityStatus,
+                "uploadSpeed": record.uploadSpeed,
+                "downloadSpeed": record.downloadSpeed
+            ]
         }
     }
     
