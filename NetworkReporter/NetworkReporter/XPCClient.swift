@@ -196,7 +196,9 @@ final class XPCClient: NSObject, NetworkReporterClientProtocol, ObservableObject
     
     func handlePerformanceRecord(_ record: [String: Any]) {
         // This method is called by the XPC service when it has a new performance record
-        NSLog("XPCClient received performance record: \(record["timestamp"] ?? "N/A")")
+        NSLog("XPCClient: handlePerformanceRecord called, timestamp: \(record["timestamp"] ?? "N/A")")
+        // NOTE: Commenting out the duplicate NSLog
+        // NSLog("XPCClient received performance record: \(record["timestamp"] ?? "N/A")")
         
         // Save to CoreData
         let context = persistenceController.container.viewContext

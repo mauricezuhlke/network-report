@@ -77,6 +77,10 @@ class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
             guard let self = self else { return }
             let record = self._measureNetworkPerformance()
             self.lastMeasuredPerformance = record
+            NSLog("NetworkReporterService: Measured performance record: \(record["timestamp"] ?? "N/A"), client is nil: \(self.client == nil)")
+            if self.client == nil {
+                NSLog("NetworkReporterService: Client proxy is nil. Cannot send performance record.")
+            }
             // Send the record to the client
             self.client?.handlePerformanceRecord(record)
         }
