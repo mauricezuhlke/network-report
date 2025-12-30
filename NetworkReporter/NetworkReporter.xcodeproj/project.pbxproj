@@ -299,7 +299,6 @@
 			targets = (
 				4FB7B9B42EF98F5200A1A958 /* NetworkReporter */,
 				4FB7B9C62EF98F5400A1A958 /* NetworkReporterTests */,
-				4FB7B9D02EF98F5400A1A958 /* NetworkReporterUITests */,
 				4FB7B9E72EF98F8300A1A958 /* NetworkReporterService */,
 			);
 		};
@@ -383,6 +382,12 @@
 			target = 4FB7B9E72EF98F8300A1A958 /* NetworkReporterService */;
 			targetProxy = 4FB7B9F12EF98F8300A1A958 /* PBXContainerItemProxy */;
 		};
+        4FB7B9F92EF98F8300A1A959 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4FB7B9E72EF98F8300A1A958 /* NetworkReporterService */;
+			targetProxy = 4FB7B9F12EF98F8300A1A958 /* PBXContainerItemProxy */;
+		};
+
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */

@@ -43,7 +43,7 @@ struct LatencyChart: View {
                 AxisValueLabel("ms")
             }
         }
-        .chartYScale(domain: 0...records.map { $0.latency }.max()! + 50) // Adjust Y-axis scale dynamically
+        .chartYScale(domain: 0...(records.map { $0.latency }.max() ?? 100) + 50) // Adjust Y-axis scale dynamically
     }
 
     @ChartContentBuilder

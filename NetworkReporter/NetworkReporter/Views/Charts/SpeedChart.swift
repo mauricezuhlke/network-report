@@ -43,7 +43,7 @@ struct SpeedChart: View {
                 AxisValueLabel("Mbps")
             }
         }
-        .chartYScale(domain: 0...records.map { max($0.uploadSpeed, $0.downloadSpeed) }.max()! + 50)
+        .chartYScale(domain: 0...(records.map { max($0.uploadSpeed, $0.downloadSpeed) }.max() ?? 50) + 50)
     }
 
     @ChartContentBuilder
