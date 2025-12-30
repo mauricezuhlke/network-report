@@ -46,7 +46,9 @@ final class XPCClient: NSObject, NetworkReporterClientProtocol, ObservableObject
     @Published var monitoringInterval: Double = UserDefaults.standard.double(forKey: "monitoringInterval") {
         didSet {
             // Inform the XPC service immediately if the interval changes
-            Task { await self.updateMonitoringInterval(to: self.monitoringInterval) }
+            DispatchQueue.main.async { // Ensure this is on the main thread
+                Task { await self.updateMonitoringInterval(to: self.monitoringInterval) }
+            }
         }
     }
     @Published var currentError: Error? // New property to publish errors to the UI
@@ -125,7 +127,11 @@ final class XPCClient: NSObject, NetworkReporterClientProtocol, ObservableObject
         if serviceProxy != nil {
             DispatchQueue.main.async { self.isServiceConnected = true }
             // Immediately send the current interval to the service
-            Task { await self.updateMonitoringInterval(to: self.monitoringInterval) }
+            Task {
+                await self.updateMonitoringInterval(to: self.monitoringInterval)
+                // Register self with the service
+                self.serviceProxy?.registerClient()
+            }
         }
     }
     

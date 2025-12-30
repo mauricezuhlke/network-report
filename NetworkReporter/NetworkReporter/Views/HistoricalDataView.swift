@@ -17,7 +17,7 @@ struct HistoricalDataView: View {
         VStack {
             Text("Historical Network Performance")
                 .font(.headline)
-                .padding(.bottom)
+                .padding()
             
             Picker("Time Range", selection: $viewModel.selectedTimeRange) {
                 ForEach(TimeRange.allCases) { range in

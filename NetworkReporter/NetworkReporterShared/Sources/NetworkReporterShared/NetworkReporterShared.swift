@@ -37,6 +37,7 @@ public enum ConnectivityStatus: Int16, CaseIterable, Identifiable, CustomStringC
     func stopMonitoring(with reply: @escaping (Error?) -> Void)
     func getCurrentPerformance(with reply: @escaping ([String: Any]?, Error?) -> Void) // Placeholder for current metrics
     func updateMonitoringInterval(to interval: Double, with reply: @escaping (Error?) -> Void)
+    func registerClient()
 }
 
 // MARK: - NetworkReporterClientProtocol (Service calls Client)

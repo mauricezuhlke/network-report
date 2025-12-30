@@ -195,55 +195,131 @@ class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
 
     
 
-    @objc func updateMonitoringInterval(to interval: Double, with reply: @escaping (Error?) -> Void) {
+        @objc func updateMonitoringInterval(to interval: Double, with reply: @escaping (Error?) -> Void) {
 
-        NSLog("NetworkReporterService: Updating monitoring interval to \(interval)s.")
+    
 
-        currentMonitoringInterval = interval
+            NSLog("NetworkReporterService: Updating monitoring interval to \(interval)s.")
 
-        
+    
 
-        // If monitoring is active, stop the current timer and start a new one with the updated interval
+            currentMonitoringInterval = interval
 
-        if isMonitoring {
+    
 
-            monitoringTimer?.cancel()
+            
 
-            startMonitoring { error in
+    
 
-                reply(error)
+            // If monitoring is active, stop the current timer and start a new one with the updated interval
+
+    
+
+            if isMonitoring {
+
+    
+
+                monitoringTimer?.cancel()
+
+    
+
+                startMonitoring { error in
+
+    
+
+                    reply(error)
+
+    
+
+                }
+
+    
+
+            } else {
+
+    
+
+                reply(nil)
+
+    
 
             }
 
-        } else {
-
-            reply(nil)
+    
 
         }
 
-    }
+    
 
+        
 
+    
 
-    @objc func getCurrentPerformance(with reply: @escaping ([String: Any]?, Error?) -> Void) {
+        @objc func registerClient() {
 
-        // Return the last measured performance if available, otherwise measure on demand
+    
 
-        if let last = lastMeasuredPerformance {
+            // This method is called by the client to register itself with the service.
 
-            reply(last, nil)
+    
 
-        } else {
+            // The service already has a weak reference to the client, which is set when the connection is established.
 
-            let currentMetrics = _measureNetworkPerformance()
+    
 
-            self.lastMeasuredPerformance = currentMetrics
+            // This method can be used to trigger any client-specific setup on the service side if needed.
 
-            reply(currentMetrics, nil)
+    
+
+            NSLog("NetworkReporterService: Client registered.")
+
+    
 
         }
 
-    }
+    
+
+    
+
+    
+
+        @objc func getCurrentPerformance(with reply: @escaping ([String: Any]?, Error?) -> Void) {
+
+    
+
+            // Return the last measured performance if available, otherwise measure on demand
+
+    
+
+            if let last = lastMeasuredPerformance {
+
+    
+
+                reply(last, nil)
+
+    
+
+            } else {
+
+    
+
+                let currentMetrics = _measureNetworkPerformance()
+
+    
+
+                self.lastMeasuredPerformance = currentMetrics
+
+    
+
+                reply(currentMetrics, nil)
+
+    
+
+            }
+
+    
+
+        }
 
 
 
