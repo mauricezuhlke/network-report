@@ -29,6 +29,9 @@ class ServiceDelegate: NSObject, NSXPCListenerDelegate {
             NSLog("Error accessing client proxy: \(error)")
         } as? NetworkReporterClientProtocol
         
+        // After setting the client, register it with the service.
+        exportedObject.registerClient()
+        
         // Resuming the connection allows the system to deliver more incoming messages.
         newConnection.resume()
         

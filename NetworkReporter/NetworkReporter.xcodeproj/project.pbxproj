@@ -20,13 +20,6 @@
 			remoteGlobalIDString = 4FB7B9B42EF98F5200A1A958;
 			remoteInfo = NetworkReporter;
 		};
-		4FB7B9D22EF98F5400A1A958 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4FB7B9AD2EF98F5200A1A958 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4FB7B9B42EF98F5200A1A958;
-			remoteInfo = NetworkReporter;
-		};
 		4FB7B9F12EF98F8300A1A958 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4FB7B9AD2EF98F5200A1A958 /* Project object */;
@@ -103,13 +96,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4FB7B9C42EF98F5400A1A958 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4FB7B9CE2EF98F5400A1A958 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -208,29 +194,6 @@
 			productReference = 4FB7B9C72EF98F5400A1A958 /* NetworkReporterTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		4FB7B9D02EF98F5400A1A958 /* NetworkReporterUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4FB7B9E12EF98F5400A1A958 /* Build configuration list for PBXNativeTarget "NetworkReporterUITests" */;
-			buildPhases = (
-				4FB7B9CD2EF98F5400A1A958 /* Sources */,
-				4FB7B9CE2EF98F5400A1A958 /* Frameworks */,
-				4FB7B9CF2EF98F5400A1A958 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4FB7B9D32EF98F5400A1A958 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				4FB7B9D42EF98F5400A1A958 /* NetworkReporterUITests */,
-			);
-			name = NetworkReporterUITests;
-			packageProductDependencies = (
-			);
-			productName = NetworkReporterUITests;
-			productReference = 4FB7B9D12EF98F5400A1A958 /* NetworkReporterUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		4FB7B9E72EF98F8300A1A958 /* NetworkReporterService */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4FB7B9F52EF98F8300A1A958 /* Build configuration list for PBXNativeTarget "NetworkReporterService" */;
@@ -268,10 +231,6 @@
 						CreatedOnToolsVersion = 26.2;
 					};
 					4FB7B9C62EF98F5400A1A958 = {
-						CreatedOnToolsVersion = 26.2;
-						TestTargetID = 4FB7B9B42EF98F5200A1A958;
-					};
-					4FB7B9D02EF98F5400A1A958 = {
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = 4FB7B9B42EF98F5200A1A958;
 					};
@@ -319,13 +278,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4FB7B9CF2EF98F5400A1A958 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4FB7B9E62EF98F8300A1A958 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -350,13 +302,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4FB7B9CD2EF98F5400A1A958 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4FB7B9E42EF98F8300A1A958 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -372,22 +317,11 @@
 			target = 4FB7B9B42EF98F5200A1A958 /* NetworkReporter */;
 			targetProxy = 4FB7B9C82EF98F5400A1A958 /* PBXContainerItemProxy */;
 		};
-		4FB7B9D32EF98F5400A1A958 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4FB7B9B42EF98F5200A1A958 /* NetworkReporter */;
-			targetProxy = 4FB7B9D22EF98F5400A1A958 /* PBXContainerItemProxy */;
-		};
 		4FB7B9F22EF98F8300A1A958 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4FB7B9E72EF98F8300A1A958 /* NetworkReporterService */;
 			targetProxy = 4FB7B9F12EF98F8300A1A958 /* PBXContainerItemProxy */;
 		};
-        4FB7B9F92EF98F8300A1A959 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4FB7B9E72EF98F8300A1A958 /* NetworkReporterService */;
-			targetProxy = 4FB7B9F12EF98F8300A1A958 /* PBXContainerItemProxy */;
-		};
-
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -617,47 +551,10 @@
 			};
 			name = Release;
 		};
-		4FB7B9E22EF98F5400A1A958 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VKVL298YR3;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = maro.NetworkReporterUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = NetworkReporter;
-			};
-			name = Debug;
-		};
-		4FB7B9E32EF98F5400A1A958 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VKVL298YR3;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = maro.NetworkReporterUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = NetworkReporter;
-			};
-			name = Release;
-		};
 		4FB7B9F62EF98F8300A1A958 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "NetworkReporterService/NetworkReporterService.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -684,6 +581,7 @@
 		4FB7B9F72EF98F8300A1A958 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "NetworkReporterService/NetworkReporterService.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -733,15 +631,6 @@
 			buildConfigurations = (
 				4FB7B9DF2EF98F5400A1A958 /* Debug */,
 				4FB7B9E02EF98F5400A1A958 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4FB7B9E12EF98F5400A1A958 /* Build configuration list for PBXNativeTarget "NetworkReporterUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4FB7B9E22EF98F5400A1A958 /* Debug */,
-				4FB7B9E32EF98F5400A1A958 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

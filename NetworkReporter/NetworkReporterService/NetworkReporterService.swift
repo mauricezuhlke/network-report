@@ -110,172 +110,74 @@ class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
 
 
     @objc func startMonitoring(with reply: @escaping (Error?) -> Void) {
-
         guard !isMonitoring else {
-
             reply(nil) // Already monitoring
-
             return
-
         }
-
         isMonitoring = true
-
-        NSLog("NetworkReporterService: Monitoring started with interval \(currentMonitoringInterval)s.")
-
-
-
-        // Invalidate any existing timer
-
-        monitoringTimer?.cancel()
-
+        NSLog("NetworkReporterService: Monitoring enabled.")
         
-
-        // Start a timer to periodically call _measureNetworkPerformance()
-
-        let timer = DispatchSource.makeTimerSource(queue: monitorQueue)
-
-        timer.schedule(deadline: .now(), repeating: currentMonitoringInterval)
-
-        timer.setEventHandler { [weak self] in
-
-            guard let self = self else { return }
-
-            let record = self._measureNetworkPerformance()
-
-            self.lastMeasuredPerformance = record
-
-            NSLog("NetworkReporterService: Measured performance record: \(record["timestamp"] ?? "N/A"), client is nil: \(self.client == nil)")
-
-            if self.client == nil {
-
-                NSLog("NetworkReporterService: Client proxy is nil. Cannot send performance record.")
-
-            }
-
-            // Send the record to the client
-
-            self.client?.handlePerformanceRecord(record) // This call still needs to be on the client's thread/runloop
-
+        // If the client is already set, start the timer immediately.
+        // Otherwise, the timer will be started when the client registers.
+        if client != nil {
+            startTimer()
         }
-
-        timer.resume()
-
-        monitoringTimer = timer
-
         
-
         reply(nil)
-
     }
-
-
 
     @objc func stopMonitoring(with reply: @escaping (Error?) -> Void) {
-
         guard isMonitoring else {
-
             reply(nil) // Not monitoring
-
             return
-
         }
-
         isMonitoring = false
-
         monitoringTimer?.cancel()
-
         monitoringTimer = nil
-
         NSLog("NetworkReporterService: Monitoring stopped.")
-
         reply(nil)
-
     }
-
     
-
-        @objc func updateMonitoringInterval(to interval: Double, with reply: @escaping (Error?) -> Void) {
-
-    
-
-            NSLog("NetworkReporterService: Updating monitoring interval to \(interval)s.")
-
-    
-
-            currentMonitoringInterval = interval
-
-    
-
-            
-
-    
-
-            // If monitoring is active, stop the current timer and start a new one with the updated interval
-
-    
-
-            if isMonitoring {
-
-    
-
-                monitoringTimer?.cancel()
-
-    
-
-                startMonitoring { error in
-
-    
-
-                    reply(error)
-
-    
-
-                }
-
-    
-
-            } else {
-
-    
-
-                reply(nil)
-
-    
-
-            }
-
-    
-
-        }
-
-    
-
+    @objc func updateMonitoringInterval(to interval: Double, with reply: @escaping (Error?) -> Void) {
+        NSLog("NetworkReporterService: Updating monitoring interval to \(interval)s.")
+        currentMonitoringInterval = interval
         
-
-    
-
-        @objc func registerClient() {
-
-    
-
-            // This method is called by the client to register itself with the service.
-
-    
-
-            // The service already has a weak reference to the client, which is set when the connection is established.
-
-    
-
-            // This method can be used to trigger any client-specific setup on the service side if needed.
-
-    
-
-            NSLog("NetworkReporterService: Client registered.")
-
-    
-
+        // If monitoring is active, restart the timer with the new interval.
+        if isMonitoring {
+            monitoringTimer?.cancel()
+            startTimer()
         }
+        
+        reply(nil)
+    }
+    
+    @objc func registerClient() {
+        NSLog("NetworkReporterService: Client registered.")
+        // If monitoring has already been enabled, start the timer now that we have a client.
+        if isMonitoring {
+            startTimer()
+        }
+    }
+    
+    private func startTimer() {
+        monitoringTimer?.cancel()
+        
+        let timer = DispatchSource.makeTimerSource(queue: monitorQueue)
+        timer.schedule(deadline: .now(), repeating: currentMonitoringInterval)
+        timer.setEventHandler { [weak self] in
+            guard let self = self else { return }
+            let record = self._measureNetworkPerformance()
+            self.lastMeasuredPerformance = record
+            
+            if let client = self.client {
+                client.handlePerformanceRecord(record)
+            } else {
+                NSLog("NetworkReporterService: Client proxy is nil. Cannot send performance record.")
+            }
+        }
+        timer.resume()
+        monitoringTimer = timer
+    }
 
     
 

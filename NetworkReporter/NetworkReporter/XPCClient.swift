@@ -129,8 +129,6 @@ final class XPCClient: NSObject, NetworkReporterClientProtocol, ObservableObject
             // Immediately send the current interval to the service
             Task {
                 await self.updateMonitoringInterval(to: self.monitoringInterval)
-                // Register self with the service
-                self.serviceProxy?.registerClient()
             }
         }
     }
