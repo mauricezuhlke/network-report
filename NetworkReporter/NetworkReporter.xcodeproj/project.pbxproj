@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F1A70412F080573003813AB /* NetworkReporterShared in Frameworks */ = {isa = PBXBuildFile; productRef = 4FFCB5DD2F005338005467CB /* NetworkReporterShared */; };
+		4F1A70422F080573003813AB /* NetworkReporterShared in Frameworks */ = {isa = PBXBuildFile; productRef = 4FFCB5DB2F00530E005467CB /* NetworkReporterShared */; };
 		4FB7B9F32EF98F8300A1A958 /* NetworkReporterService.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 4FB7B9E82EF98F8300A1A958 /* NetworkReporterService.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		4FFCB5DC2F00530E005467CB /* NetworkReporterShared in Frameworks */ = {isa = PBXBuildFile; productRef = 4FFCB5DB2F00530E005467CB /* NetworkReporterShared */; };
-		4FFCB5DE2F005338005467CB /* NetworkReporterShared in Frameworks */ = {isa = PBXBuildFile; productRef = 4FFCB5DD2F005338005467CB /* NetworkReporterShared */; };
+		4FF7EBC52F0803C900C92D6E /* NetworkReporterShared in Frameworks */ = {isa = PBXBuildFile; productRef = 4FF7EBC42F0803C900C92D6E /* NetworkReporterShared */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,26 +88,27 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4FB7B9B22EF98F5200A1A958 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4FFCB5DC2F00530E005467CB /* NetworkReporterShared in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4FB7B9C42EF98F5400A1A958 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FF7EBC52F0803C900C92D6E /* NetworkReporterShared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4FB7B9E52EF98F8300A1A958 /* Frameworks */ = {
+		4FF7EBC32F08039E00C92D6E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4FFCB5DE2F005338005467CB /* NetworkReporterShared in Frameworks */,
+				4F1A70422F080573003813AB /* NetworkReporterShared in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4FF7EBC62F0803D100C92D6E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F1A70412F080573003813AB /* NetworkReporterShared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,9 +153,9 @@
 			buildConfigurationList = 4FB7B9DB2EF98F5400A1A958 /* Build configuration list for PBXNativeTarget "NetworkReporter" */;
 			buildPhases = (
 				4FB7B9B12EF98F5200A1A958 /* Sources */,
-				4FB7B9B22EF98F5200A1A958 /* Frameworks */,
 				4FB7B9B32EF98F5200A1A958 /* Resources */,
 				4FB7B9F82EF98F8300A1A958 /* Embed XPC Services */,
+				4FF7EBC32F08039E00C92D6E /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -189,6 +191,7 @@
 			);
 			name = NetworkReporterTests;
 			packageProductDependencies = (
+				4FF7EBC42F0803C900C92D6E /* NetworkReporterShared */,
 			);
 			productName = NetworkReporterTests;
 			productReference = 4FB7B9C72EF98F5400A1A958 /* NetworkReporterTests.xctest */;
@@ -199,8 +202,8 @@
 			buildConfigurationList = 4FB7B9F52EF98F8300A1A958 /* Build configuration list for PBXNativeTarget "NetworkReporterService" */;
 			buildPhases = (
 				4FB7B9E42EF98F8300A1A958 /* Sources */,
-				4FB7B9E52EF98F8300A1A958 /* Frameworks */,
 				4FB7B9E62EF98F8300A1A958 /* Resources */,
+				4FF7EBC62F0803D100C92D6E /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -450,6 +453,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -459,6 +463,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -482,6 +487,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -491,6 +497,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -554,7 +561,7 @@
 		4FB7B9F62EF98F8300A1A958 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "NetworkReporterService/NetworkReporterService.entitlements";
+				CODE_SIGN_ENTITLEMENTS = NetworkReporterService/NetworkReporterService.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -581,7 +588,7 @@
 		4FB7B9F72EF98F8300A1A958 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "NetworkReporterService/NetworkReporterService.entitlements";
+				CODE_SIGN_ENTITLEMENTS = NetworkReporterService/NetworkReporterService.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -654,6 +661,11 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4FF7EBC42F0803C900C92D6E /* NetworkReporterShared */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4FFCB5D92F0052E2005467CB /* XCLocalSwiftPackageReference "NetworkReporterShared" */;
+			productName = NetworkReporterShared;
+		};
 		4FFCB5DB2F00530E005467CB /* NetworkReporterShared */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4FFCB5D92F0052E2005467CB /* XCLocalSwiftPackageReference "NetworkReporterShared" */;

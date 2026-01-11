@@ -1,84 +1,83 @@
-# Implementation Plan: Network Performance Monitor
+# Validation and Release Plan: Network Performance Monitor
 
-**Branch**: `001-network-performance-monitor` | **Date**: 2025-12-27 | **Spec**: ./spec.md
-**Input**: Feature specification from `/specs/001-network-performance-monitor/spec.md`
+**Branch**: `001-network-performance-monitor` | **Date**: 2026-01-03 | **Spec**: ./spec.md
+**Input**: Feature specification from `/specs/001-network-performance-monitor/spec.md` and guidance from `SUGGESTED_NEXT_STEPS.md`.
 
 ## Summary
 
-The Network Performance Monitor will provide users with real-time and historical insights into their internet connection performance to their ISP. This includes displaying current connectivity status, latency, packet loss, and bandwidth, as well as visualizing these metrics over time using charts and graphs. The technical approach involves building a native MacOS Desktop application using the existing `NetworkReporter` project as a foundation, leveraging SQLite for historical data storage and exclusively utilizing native MacOS libraries and frameworks for all UI components, including charting and graphing. No external third-party dependencies will be introduced.
+The initial implementation phase, as detailed in `tasks.md`, is complete. This plan outlines the next steps to move the `001-network-performance-monitor` feature from implementation to a production-ready state. The focus is on comprehensive verification, performance profiling, and final release preparation.
 
 ## Technical Context
 
-**Language/Version**: Swift 5.x (latest compatible with MacOS App Development)
-**Primary Dependencies**: Native MacOS Frameworks (e.g., Network, CoreData, SwiftUI/AppKit, Charts Framework - if available or custom implementation)
-**Storage**: SQLite (via CoreData for object persistence)
+This plan assumes the successful completion of all tasks in `specs/001-network-performance-monitor/tasks.md`.
+
+**Language/Version**: Swift 5.x
+**Primary Dependencies**: Native MacOS Frameworks (Network, CoreData, SwiftUI)
 **Testing**: XCTest
-**Target Platform**: MacOS Desktop only (macOS 13+)
-**Project Type**: Single Native MacOS Desktop Application
-**Performance Goals**:
-- SC-001: Users can view their current network status, including connectivity, latency, packet loss, and speeds, within 5 seconds of opening the application.
-- SC-002: Historical charts and graphs for the last 24 hours load and are fully rendered within 3 seconds.
-- SC-003: 95% of users can correctly identify a period of significant network lag or dropout on a historical graph within 10 seconds.
-**Constraints**:
-- Must be a Native MacOS Desktop only application.
-- Must use the existing `NetworkReporter` project as the foundation.
-- Storage for historical data must use SQLite.
-- All charts and graphs must be implemented using native MacOS libraries and frameworks.
-- No external third-party dependencies (only core OS frameworks, libraries, or plugins).
-- Historical data should be retained for 18 months.
-**Scale/Scope**: Designed for a single user desktop environment. Focus on monitoring a single ISP connection.
+**Target Platform**: MacOS Desktop (macOS 13+)
 
-## Constitution Check
+---
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+## Phase 1: Comprehensive Verification & Validation
 
-No specific project `constitution.md` principles or gates were found (the file appears to be a template). Therefore, no violations can be assessed at this stage. Assuming standard good engineering practices and adherence to the specified constraints.
+**Goal**: Ensure the application is robust, bug-free, and meets all functional and non-functional requirements specified in `spec.md`.
 
-## Project Structure
+**Steps**:
 
-### Documentation (this feature)
+1.  **Review Existing Tests**:
+    *   Audit the existing unit tests (`T026`, `T027`) to ensure they provide adequate coverage for CoreData logic and network metric collection.
+    *   Verify the end-to-end integration tests (`T028`) and confirm they cover the full data flow from the XPC service to the UI.
 
-```text
-specs/001-network-performance-monitor/
-├── plan.md              # This file (/speckit.plan command output)
-├── research.md          # Phase 0 output (/speckit.plan command)
-├── data-model.md        # Phase 1 output (/speckit.plan command)
-├── quickstart.md        # Phase 1 output (/speckit.plan command)
-├── contracts/           # Phase 1 output (/speckit.plan command)
-└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
-```
+2.  **UI Testing**:
+    *   Develop and execute UI tests to verify the correctness of all views, including `RealTimeNetworkView` and `HistoricalDataView`.
+    *   **Test Scenario**: Ensure charts render correctly with data from `NetworkChartViewModel`.
+    *   **Test Scenario**: Verify that time range selection in `HistoricalDataView` properly updates the charts.
+    *   **Test Scenario**: Confirm that periods of network degradation are visually highlighted as specified (`FR-006`).
 
-### Source Code (repository root)
+3.  **User Acceptance Testing (UAT)**:
+    *   Perform manual testing based on all user stories and acceptance scenarios in `spec.md`.
+    *   Verify the application gracefully handles edge cases, such as no internet connection and extreme network conditions.
 
-```text
-NetworkReporter/
-├── NetworkReporter/ # Main application target
-│   ├── ContentView.swift             # Main UI view
-│   ├── ContentViewModel.swift        # ViewModel for ContentView
-│   ├── NetworkReporterApp.swift      # Application entry point
-│   ├── NetworkReporterServiceProtocol.swift # XPC service protocol
-│   ├── Persistence.swift             # CoreData/SQLite setup
-│   ├── XPCClient.swift               # Client for XPC service
-│   ├── Assets.xcassets/
-│   ├── NetworkReporter.xcdatamodeld/ # CoreData data model
-│   └── (New files for charting/history UI components)
-├── NetworkReporter.xcodeproj/
-├── NetworkReporterService/ # XPC service target for background monitoring
-│   ├── Info.plist
-│   ├── main.swift
-│   ├── NetworkReporterService.swift  # Implementation of the XPC service
-│   └── NetworkReporterServiceProtocol.swift # Shared protocol
-├── NetworkReporterTests/
-│   └── NetworkReporterTests.swift
-└── NetworkReporterUITests/
-    ├── NetworkReporterUITests.swift
-    └── NetworkReporterUITestsLaunchTests.swift
-```
+---
 
-**Structure Decision**: The existing `NetworkReporter` project structure will be extended. The core application logic and UI will reside within `NetworkReporter/NetworkReporter/`, leveraging CoreData for SQLite persistence. Background monitoring will continue to be handled by `NetworkReporterService/`. New UI components for charts and historical data will be added to the main application target.
+## Phase 2: Performance & Optimization
 
-## Complexity Tracking
+**Goal**: Profile the application to ensure it meets performance goals and is efficient in its use of system resources.
 
-> **Fill ONLY if Constitution Check has violations that must be justified**
+**Steps**:
 
-(No violations identified based on the provided (template) constitution. This section is not applicable at this stage.)
+1.  **Performance Profiling**:
+    *   Use Xcode Instruments to profile the application's CPU usage, especially during background data collection.
+    *   Measure the time taken to load historical charts and ensure it meets the success criteria (`SC-002`: < 3 seconds for 24 hours of data).
+
+2.  **Memory Profiling**:
+    *   Use Xcode Instruments to check for memory leaks, particularly in the SwiftUI views and data handling logic.
+    *   Analyze the application's memory footprint over time to ensure there is no excessive growth.
+
+3.  **Energy Impact**:
+    *   Profile the application's energy impact to ensure the background monitoring service is efficient and does not excessively drain battery on portable Macs.
+
+---
+
+## Phase 3: Release Preparation
+
+**Goal**: Prepare the application for distribution.
+
+**Steps**:
+
+1.  **Code Signing & Provisioning**:
+    *   Configure the Xcode project with the correct developer certificates and provisioning profiles for both the main application and the XPC service.
+    *   Ensure the application is correctly signed.
+
+2.  **Archiving**:
+    *   Create a build archive of the application for distribution.
+    *   Perform notarization if distributing outside the Mac App Store.
+
+3.  **Documentation**:
+    *   Update `README.md` with information about the new features.
+    *   Create user-facing release notes that describe the Network Performance Monitor.
+    *   Verify `quickstart.md` is up-to-date for developers.
+
+4.  **Final Review**:
+    *   Conduct a final code review of any changes made during the verification and optimization phases.
+    *   Perform a security and accessibility audit.

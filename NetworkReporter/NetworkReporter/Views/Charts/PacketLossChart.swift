@@ -19,6 +19,7 @@ struct PacketLossChart: View {
             
             chartView // Use extracted chart view
             .frame(height: 200)
+            .accessibilityLabel("Line chart showing network packet loss as a percentage over time. A dashed red line indicates the high packet loss threshold of 5%.")
         }
     }
 

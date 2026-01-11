@@ -81,7 +81,7 @@ class PersistenceController {
     }
 
     // MARK: - Data Purging
-    private func purgeOldRecords() {
+    internal func purgeOldRecords() {
         let eighteenMonthsAgo = Calendar.current.date(byAdding: .month, value: -18, to: Date())!
         let predicate = NSPredicate(format: "timestamp < %@", eighteenMonthsAgo as NSDate)
         

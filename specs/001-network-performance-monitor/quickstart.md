@@ -41,8 +41,13 @@ Build and run both the `NetworkReporter` app target and the `NetworkReporterServ
 
 ## 6. Testing
 
-Refer to `NetworkReporterTests/NetworkReporterTests.swift` for existing unit tests and newly added tests for CoreData persistence and `NetworkReporterService` interaction.
-*   Data persistence logic (CoreData/SQLite).
-*   Network performance metric collection and XPC communication in `NetworkReporterService` and `XPCClient`.
-*   UI rendering of charts and historical data.
-*   End-to-end data flow from service to UI.
+The project includes a growing suite of tests to ensure quality and stability. Refer to `NetworkReporterTests/NetworkReporterTests.swift` and `NetworkReporterUITests/NetworkReporterUITests.swift` for all tests.
+
+Key areas covered by tests:
+*   **Unit Tests:**
+    *   CoreData persistence logic (saving, fetching, purging).
+    *   Parsing logic for `ping` output in the `NetworkReporterService`.
+*   **UI Tests:**
+    *   Application launch and basic UI element presence.
+    *   Navigation from the main view to the `HistoricalDataView`.
+    *   Verification of chart titles and degradation markers in the historical view.

@@ -19,6 +19,7 @@ struct ConnectivityChart: View {
             
             chartView // Use extracted chart view
             .frame(height: 200)
+            .accessibilityLabel("Chart showing network connectivity status over time. Green is connected, orange is degraded, red is disconnected.")
         }
     }
     

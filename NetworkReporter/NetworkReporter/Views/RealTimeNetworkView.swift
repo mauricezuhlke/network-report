@@ -18,18 +18,49 @@ struct RealTimeNetworkView: View {
                 .padding(.bottom, 5)
             
             if let record = recentRecords.last { // Display latest record for real-time metrics
-                HStack {
-                    Text("Status:")
-                        .fontWeight(.medium)
-                    Spacer()
-                    Text(record.connectivityStatus_.description)
-                        .foregroundColor(connectivityStatusColor(for: record.connectivityStatus_.description))
+                VStack(spacing: 8) {
+                    HStack {
+                        Text("Status:")
+                            .fontWeight(.medium)
+                        Spacer()
+                        Text(record.connectivityStatus_.description)
+                            .foregroundColor(connectivityStatusColor(for: record.connectivityStatus_.description))
+                    }
+                    
+                    HStack {
+                        Text("Latency:")
+                            .fontWeight(.medium)
+                        Spacer()
+                        Text(String(format: "%.2f ms", record.latency))
+                    }
+                    
+                    HStack {
+                        Text("Packet Loss:")
+                            .fontWeight(.medium)
+                        Spacer()
+                        Text(String(format: "%.1f %%", record.packetLoss * 100))
+                    }
+
+                    HStack {
+                        Text("Download Speed:")
+                            .fontWeight(.medium)
+                        Spacer()
+                        Text(String(format: "%.2f Mbps", record.downloadSpeed))
+                    }
+
+                    HStack {
+                        Text("Upload Speed:")
+                            .fontWeight(.medium)
+                        Spacer()
+                        Text(String(format: "%.2f Mbps", record.uploadSpeed))
+                    }
                 }
-                .frame(maxWidth: .infinity)
                 
                 Text("Last updated: \(record.timestamp ?? Date(), formatter: itemFormatter)") // Use record.timestamp directly
                     .font(.caption)
                     .foregroundColor(.gray)
+                    .padding(.top, 5)
+
             } else {
                 Text("Connecting to service and collecting data...")
                     .foregroundColor(.gray)

@@ -110,25 +110,20 @@ struct CoreDataPersistenceTests {
         // Create a record older than 18 months
         let oldRecord = NetworkPerformanceRecord(context: context)
         oldRecord.id = UUID()
-        oldRecord.timestamp = Calendar.current.date(byAdding: .month, value: -19, to: Date())! // 19 months ago
-        oldRecord.latency = 50.0
-        oldRecord.packetLoss = 0.01
-        oldRecord.connectivityStatus = ConnectivityStatus.connected.rawValue
-        oldRecord.uploadSpeed = 100.0
-        oldRecord.downloadSpeed = 500.0
+        oldRecord.timestamp = Calendar.current.date(byAdding: .month, value: -19, to: Date())!
         
         // Create a recent record
         let recentRecord = NetworkPerformanceRecord(context: context)
         recentRecord.id = UUID()
         recentRecord.timestamp = Date()
-        recentRecord.latency = 50.0
-        recentRecord.packetLoss = 0.01
-        recentRecord.connectivityStatus = ConnectivityStatus.connected.rawValue
-        recentRecord.uploadSpeed = 100.0
-        recentRecord.downloadSpeed = 500.0
         
+        // Save both records
         persistenceController.save()
         
+        // Explicitly call the purge function to test it
+        persistenceController.purgeOldRecords()
+        
+        // Fetch remaining records
         let fetchRequest: NSFetchRequest<NetworkPerformanceRecord> = NetworkPerformanceRecord.fetchRequest()
         let allRecordsAfterPurge = try context.fetch(fetchRequest)
         
@@ -136,6 +131,46 @@ struct CoreDataPersistenceTests {
         #expect(allRecordsAfterPurge.first?.id == recentRecord.id)
     }
 }
+
+// MARK: - NetworkReporterServiceTests (New Tests)
+struct NetworkReporterServiceTests {
+    let service = NetworkReporterService()
+
+    @Test func testParsePingLatency() {
+        let normalOutput = "round-trip min/avg/max/stddev = 13.596/14.077/14.869/0.502 ms"
+        let zeroOutput = "round-trip min/avg/max/stddev = 0/0/0/0 ms"
+        let noOutput = "some other random string"
+        
+        let latency1 = service._parsePingLatency(from: normalOutput)
+        #expect(latency1 == 14.077)
+        
+        let latency2 = service._parsePingLatency(from: zeroOutput)
+        #expect(latency2 == 0)
+        
+        let latency3 = service._parsePingLatency(from: noOutput)
+        #expect(latency3 == 0.0)
+    }
+
+    @Test func testParsePacketLoss() {
+        let normalOutput = "5 packets transmitted, 5 packets received, 0.0% packet loss"
+        let lossOutput = "10 packets transmitted, 8 received, 20.0% packet loss"
+        let hundredPercentLoss = "5 packets transmitted, 0 received, 100.0% packet loss"
+        let noOutput = "some other random string"
+
+        let loss1 = service._parsePacketLoss(from: normalOutput)
+        #expect(loss1 == 0.0)
+
+        let loss2 = service._parsePacketLoss(from: lossOutput)
+        #expect(loss2 == 0.2)
+
+        let loss3 = service._parsePacketLoss(from: hundredPercentLoss)
+        #expect(loss3 == 1.0)
+
+        let loss4 = service._parsePacketLoss(from: noOutput)
+        #expect(loss4 == 1.0) // Should default to 100% loss if parsing fails
+    }
+}
+
 
 // MARK: - Mock NetworkReporterClientProtocol
 class MockNetworkReporterClient: NSObject, NetworkReporterClientProtocol {

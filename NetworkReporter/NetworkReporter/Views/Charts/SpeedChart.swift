@@ -19,6 +19,7 @@ struct SpeedChart: View {
             
             chartView // Use extracted chart view
             .frame(height: 200)
+            .accessibilityLabel("Line chart showing network upload and download speed in megabits per second over time.")
         }
     }
 

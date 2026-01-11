@@ -20,6 +20,7 @@ Think of it as your personal network detective, always on the case! 🕵️‍�
 ## ✨ Features ✨
 
 *   **Real-time Monitoring:** Keep a constant eye on your network connectivity.
+*   **Historical Performance Analysis:** Dive into your network's history with beautiful charts and graphs. See trends, identify past issues, and understand your connection's long-term stability.
 *   **Simple Status Icons:** A quick glance tells you if everything is A-OK 👌, a bit shaky 😬, or totally kaput 😭.
 *   **ICMP Pinging:** We send out tiny, harmless "pings" to check if servers are responsive. It's like playing digital Marco Polo!
 *   **Sleek & Lightweight:** Designed to be a good citizen on your Mac, using minimal resources.

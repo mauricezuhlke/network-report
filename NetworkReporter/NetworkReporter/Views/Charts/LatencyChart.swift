@@ -19,6 +19,7 @@ struct LatencyChart: View {
             
             chartView // Use extracted chart view
             .frame(height: 200)
+            .accessibilityLabel("Line chart showing network latency in milliseconds over time. A dashed red line indicates the high latency threshold of 200 milliseconds.")
         }
     }
 

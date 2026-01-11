@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import Combine
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -45,10 +46,22 @@ struct ContentView: View {
                         .foregroundColor(.gray)
                 }
                 
+                // Navigation to Historical View
+                NavigationLink(destination: HistoricalDataView()) {
+                    Text("View History")
+                        .padding()
+                }
+
                 Spacer()
             }
             .padding()
             .navigationTitle("Network Monitor")
+            // Add a destination for the historical view
+            .background(
+                NavigationLink(destination: HistoricalDataView(), isActive: .constant(false)) {
+                    EmptyView()
+                }
+            )
         }
     }
 

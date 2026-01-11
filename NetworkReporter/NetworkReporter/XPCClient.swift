@@ -177,7 +177,7 @@ final class XPCClient: NSObject, NetworkReporterClientProtocol, ObservableObject
                     DispatchQueue.main.async { self?.currentError = XPCClientError.serviceReturnedError(error) }
                     continuation.resume(throwing: XPCClientError.serviceReturnedError(error))
                 } else {
-                    self?.currentError = nil // Clear error on success
+                    DispatchQueue.main.async { self?.currentError = nil } // Clear error on success
                     continuation.resume(returning: ())
                 }
             }
@@ -194,7 +194,7 @@ final class XPCClient: NSObject, NetworkReporterClientProtocol, ObservableObject
                     DispatchQueue.main.async { self?.currentError = XPCClientError.serviceReturnedError(error) }
                     continuation.resume(throwing: XPCClientError.serviceReturnedError(error))
                 } else {
-                    self?.currentError = nil // Clear error on success
+                    DispatchQueue.main.async { self?.currentError = nil } // Clear error on success
                     continuation.resume(returning: ())
                 }
             }
@@ -214,7 +214,7 @@ final class XPCClient: NSObject, NetworkReporterClientProtocol, ObservableObject
                     DispatchQueue.main.async { self?.currentError = XPCClientError.serviceReturnedError(error) }
                 } else {
                     NSLog("XPCClient: Monitoring interval updated to \(interval)s.")
-                    self?.currentError = nil // Clear error on success
+                    DispatchQueue.main.async { self?.currentError = nil } // Clear error on success
                 }
                 continuation.resume(returning: ())
             }
@@ -231,7 +231,7 @@ final class XPCClient: NSObject, NetworkReporterClientProtocol, ObservableObject
                     DispatchQueue.main.async { self?.currentError = XPCClientError.serviceReturnedError(error) }
                     continuation.resume(throwing: XPCClientError.serviceReturnedError(error))
                 } else {
-                    self?.currentError = nil // Clear error on success
+                    DispatchQueue.main.async { self?.currentError = nil } // Clear error on success
                     continuation.resume(returning: performance)
                 }
             }

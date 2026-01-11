@@ -159,144 +159,298 @@ class NetworkReporterService: NSObject, NetworkReporterServiceProtocol {
         }
     }
     
-    private func startTimer() {
-        monitoringTimer?.cancel()
-        
-        let timer = DispatchSource.makeTimerSource(queue: monitorQueue)
-        timer.schedule(deadline: .now(), repeating: currentMonitoringInterval)
-        timer.setEventHandler { [weak self] in
-            guard let self = self else { return }
-            let record = self._measureNetworkPerformance()
-            self.lastMeasuredPerformance = record
+        private func startTimer() {
+    
+            monitoringTimer?.cancel()
+    
             
-            if let client = self.client {
-                client.handlePerformanceRecord(record)
-            } else {
-                NSLog("NetworkReporterService: Client proxy is nil. Cannot send performance record.")
+    
+            let timer = DispatchSource.makeTimerSource(queue: monitorQueue)
+    
+            timer.schedule(deadline: .now(), repeating: currentMonitoringInterval)
+    
+            timer.setEventHandler { [weak self] in
+    
+                guard let self = self else { return }
+    
+                
+    
+                Task {
+    
+                    let record = await self._measureNetworkPerformance()
+    
+                    self.lastMeasuredPerformance = record
+    
+                    
+    
+                    if let client = self.client {
+    
+                        client.handlePerformanceRecord(record)
+    
+                    } else {
+    
+                        NSLog("NetworkReporterService: Client proxy is nil. Cannot send performance record.")
+    
+                    }
+    
+                }
+    
             }
+    
+            timer.resume()
+    
+            monitoringTimer = timer
+    
         }
-        timer.resume()
-        monitoringTimer = timer
-    }
-
     
-
+        
     
-
-    
-
         @objc func getCurrentPerformance(with reply: @escaping ([String: Any]?, Error?) -> Void) {
-
     
-
             // Return the last measured performance if available, otherwise measure on demand
-
     
-
             if let last = lastMeasuredPerformance {
-
     
-
                 reply(last, nil)
-
     
-
             } else {
-
     
-
-                let currentMetrics = _measureNetworkPerformance()
-
+                Task {
     
-
-                self.lastMeasuredPerformance = currentMetrics
-
+                    let currentMetrics = await self._measureNetworkPerformance()
     
-
-                reply(currentMetrics, nil)
-
+                    self.lastMeasuredPerformance = currentMetrics
     
-
+                    reply(currentMetrics, nil)
+    
+                }
+    
             }
-
     
-
         }
-
-
-
-
-
-
-
-    // Placeholder for actual network performance measurement
-
-    private func _measureNetworkPerformance() -> [String: Any] {
-
-        var latency = 0.0
-
-        var packetLoss = 0.0
-
-        var connectivityStatus: Int16 = ConnectivityStatus.disconnected.rawValue // Default disconnected
-
-        var uploadSpeed = 0.0
-
-        var downloadSpeed = 0.0
-
+    
+    
+    
+        // MARK: - Real Network Performance Measurement
+    
         
-
-        if isConnectedToInternet { // Use the actual network state
-
-            latency = Double.random(in: 20...150)
-
-            packetLoss = Double.random(in: 0...0.02)
-
-            connectivityStatus = (latency > 100 || packetLoss > 0.01) ? ConnectivityStatus.degraded.rawValue : ConnectivityStatus.connected.rawValue
-
-            uploadSpeed = Double.random(in: 10...80) // Mbps
-
-            downloadSpeed = Double.random(in: 50...500) // Mbps
-
-        } else {
-
-            // Simulate disconnected state
-
-            latency = 9999.0 // Very high latency
-
-            packetLoss = 1.0 // 100% packet loss
-
-            connectivityStatus = ConnectivityStatus.disconnected.rawValue
-
-            // Speeds remain 0.0
-
+    
+        private func _measureNetworkPerformance() async -> [String: Any] {
+    
+            var latency = 0.0
+    
+            var packetLoss = 0.0
+    
+            var connectivityStatus: Int16 = ConnectivityStatus.disconnected.rawValue
+    
+            
+    
+            if isConnectedToInternet {
+    
+                NSLog("Measuring network performance...")
+    
+                let (pingLatency, pingPacketLoss) = await _executePing()
+    
+                latency = pingLatency
+    
+                packetLoss = pingPacketLoss
+    
+                
+    
+                if latency > 0 {
+    
+                    connectivityStatus = (latency > 200 || packetLoss > 0.05) ? ConnectivityStatus.degraded.rawValue : ConnectivityStatus.connected.rawValue
+    
+                }
+    
+                
+    
+            } else {
+    
+                NSLog("Not connected to internet. Reporting disconnected state.")
+    
+                latency = 9999.0
+    
+                packetLoss = 1.0
+    
+                connectivityStatus = ConnectivityStatus.disconnected.rawValue
+    
+            }
+    
+            
+    
+            // Speed metrics are 0.0 as speedtest-cli was not found.
+    
+            let uploadSpeed = 0.0
+    
+            let downloadSpeed = 0.0
+    
+            if isConnectedToInternet {
+    
+                 NSLog("speedtest-cli not found. Skipping speed measurement. To enable, install speedtest-cli (e.g., 'brew install speedtest-cli').")
+    
+            }
+    
+    
+    
+            let timestamp = Date()
+    
+            let record: [String: Any] = [
+    
+                "id": UUID().uuidString,
+    
+                "timestamp": timestamp,
+    
+                "latency": latency,
+    
+                "packetLoss": packetLoss,
+    
+                "connectivityStatus": connectivityStatus,
+    
+                "uploadSpeed": uploadSpeed,
+    
+                "downloadSpeed": downloadSpeed
+    
+            ]
+    
+    
+    
+            NSLog("Performance record created: latency=\(latency)ms, packetLoss=\(packetLoss)%")
+    
+            return record
+    
         }
-
-        
-
-        let timestamp = Date()
-
-        let record: [String: Any] = [
-
-            "id": UUID().uuidString,
-
-            "timestamp": timestamp,
-
-            "latency": latency,
-
-            "packetLoss": packetLoss,
-
-            "connectivityStatus": connectivityStatus,
-
-            "uploadSpeed": uploadSpeed,
-
-            "downloadSpeed": downloadSpeed
-
-        ]
-
-
-
-        return record
-
+    
+    
+    
+        private func _executePing(host: String = "8.8.8.8", count: Int = 4) async -> (latency: Double, packetLoss: Double) {
+    
+            let command = "ping -c \(count) \(host)"
+    
+            do {
+    
+                let output = try await _runShellCommand(command)
+    
+                let latency = _parsePingLatency(from: output)
+    
+                let packetLoss = _parsePacketLoss(from: output)
+    
+                return (latency, packetLoss)
+    
+            } catch {
+    
+                NSLog("Failed to execute ping command: \(error)")
+    
+                return (0.0, 1.0) // Return 0 latency and 100% packet loss on error
+    
+            }
+    
+        }
+    
+    
+    
+        internal func _parsePingLatency(from output: String) -> Double {
+    
+            // Example line: round-trip min/avg/max/stddev = 13.596/14.077/14.869/0.502 ms
+    
+            if let range = output.range(of: "round-trip min/avg/max/stddev = ") {
+    
+                let statsString = output[range.upperBound...]
+    
+                let parts = statsString.split(separator: " ")[0].split(separator: "/")
+    
+                if parts.count >= 2 {
+    
+                    return Double(parts[1]) ?? 0.0
+    
+                }
+    
+            }
+    
+            return 0.0
+    
+        }
+    
+    
+    
+        internal func _parsePacketLoss(from output: String) -> Double {
+    
+            // Example line: 5 packets transmitted, 5 packets received, 0.0% packet loss
+    
+            if let range = output.range(of: "packet loss") {
+    
+                let prefix = output[..<range.lowerBound]
+    
+                if let lossRange = prefix.range(of: ", ", options: .backwards) {
+    
+                     let lossString = prefix[lossRange.upperBound...].trimmingCharacters(in: .whitespacesAndNewlines)
+    
+                     if let percentage = Double(lossString.replacingOccurrences(of: "%", with: "")) {
+    
+                         return percentage / 100.0
+    
+                     }
+    
+                }
+    
+            }
+    
+            return 1.0 // Assume 100% loss if parsing fails
+    
+        }
+    
+    
+    
+        private func _runShellCommand(_ command: String) async throws -> String {
+    
+            let process = Process()
+    
+            process.executableURL = URL(fileURLWithPath: "/bin/bash")
+    
+            process.arguments = ["-c", command]
+    
+    
+    
+            let outputPipe = Pipe()
+    
+            process.standardOutput = outputPipe
+    
+    
+    
+            return try await withCheckedThrowingContinuation { continuation in
+    
+                do {
+    
+                    try process.run()
+    
+                    process.terminationHandler = { process in
+    
+                        let data = outputPipe.fileHandleForReading.readDataToEndOfFile()
+    
+                        let output = String(data: data, encoding: .utf8) ?? ""
+    
+                        if process.terminationStatus == 0 {
+    
+                            continuation.resume(returning: output)
+    
+                        } else {
+    
+                            continuation.resume(throwing: NSError(domain: "ShellCommandError", code: Int(process.terminationStatus), userInfo: [NSLocalizedDescriptionKey: "Command failed: \(command)"]))
+    
+                        }
+    
+                    }
+    
+                } catch {
+    
+                    continuation.resume(throwing: error)
+    
+                }
+    
+            }
+    
+        }
+    
     }
-
-}
+    
+    
